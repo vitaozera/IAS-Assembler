@@ -1,0 +1,21 @@
+/* Ideias */
+-Talvez seja interessante, quando o programa ler um comando que precisa de outro, tipo LOAD, que precisa do numero,
+colocar o LOAD em uma pilha, pois aí quando ele ler o numero ele vai procurar na pilha se existe alguem ou se o numero vai ficar sozinho na memoria.
+
+- UMA PALAVRA É UM STRUCT. ELA CONTEM OUTROS 2 STRUCTS QUE SAO AS INSTRUCOES DA ESQUERDA E DIREITA, MARCADOS POR UMA FLAG. ELAS CONTEM OPCODE E ENDERECO. OU WORD, NO CASO DE UM NUMERO. TEM QUE CONTER TAMBEM A POSICAO DE MEMORIA.
+
+
+/* A implementar */
+- as entradas de numeros com aspas tipo "0x0054" precisa ser tratada
+
+/* Lembretes */
+- não esquecer de fechar arquivos
+- liberar memória
+- ficar antento pra ver se de fato o arquivo de entrada coube no vetor buffer
+- parametros do zanoni
+- fechar programa com exit(-1)
+
+
+/* Mandar coisas pro git */
+git add .
+git commit -m 'Implementada indentificacao de tipos de campo'
