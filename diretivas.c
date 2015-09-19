@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "diretivas.h"
 
+#define TAM_PALAVRA 11
+
 struct item {
 	char campo[64];
 	int tipo;
@@ -24,9 +26,10 @@ struct rotulo {
 };
 
 struct palavra {
-	char *campo1, *campo2;
+	char campo1[TAM_PALAVRA], campo2[TAM_PALAVRA];
 	int pos;  // posicao associada
 	int tipo;
+	struct palavra *prox;
 };
 
 void addListaSet(struct diretivaSet *diretivaSet, char campo[], char valor[]) {
@@ -145,15 +148,50 @@ void executarAlign(int *pontoDeMontagem, int i) {
 	*pontoDeMontagem = k + i;
 }
 
-void executarWord(struct rotulo *listaRotulos, int *pontoDeMontagem) {
+void executarWord(struct item *pItem, struct rotulo *listaRotulos,
+ int *pontoDeMontagem, struct palavra *listaPalavras) {
+	char pos[10]; //posicão do rótulo, caso haja
+	struct palavra *p;
 
-	
+	/* Vai até o fim da lista ligada de palavras */
+	p = listaPalavras;
+	while(p->prox != NULL) {
+		p = p->prox;
+	}
 
-	// DEBUG atualizar aqui o ponto de montagem em +1
+	/* Coloca o numero na lista ligada de palavras */
+	p->prox = malloc(sizeof(struct palavra));
+	if(pItem->tipo = DECIMAL)
+		strcpy(p->prox->campo1, pItem->campo);
+	else if(pItem->tipo = HEXADECIMAL)
+		strcpy(p->prox->campo1, pItem->campo+2);
+	else if(pItem->tipo = ROTULO) {
+		//DEBUG FALTA IMPLEMENTAR O CASO DO TIPO .WORD ROTULO:
+	}
+	p->prox->campo2[0] = '\0';
+	p->prox->pos = *pontoDeMontagem;
+	p->prox->tipo = NUMERO_HEXA;
+	p->prox->prox = NULL;
+
+	*pontoDeMontagem = *pontoDeMontagem + 1;
+}
+
+void executarWFill(struct item *pItem, struct rotulo *listaRotulos,
+ int *pontoDeMontagem, struct palavra *listaPalavras) {
+	int i, j;
+
+	i = atoi(pItem->campo);
+	printf("Valor de i:%d  |  Campo:%s\n", i, pItem->campo);
+
+	/* manda rodar i vezes a diretiva .word */
+	for(j = 0; j < i; j++) {
+		executarWord(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras);
+	}
 }
 
 /* Executa todos tipo de diretiva, exceto a .set que é executada por diretivaSet() */
-void executarDiretiva(struct item *pItem, struct item *listaItens, struct rotulo *listaRotulos, int *pontoDeMontagem) {
+void executarDiretiva(struct item *pItem, struct item *listaItens, struct rotulo *listaRotulos,
+ int *pontoDeMontagem, struct palavra *listaPalavras) {
 	int tipoDiretiva, multiplo;
 
 	/* Identifica o tipo de diretiva */
@@ -171,11 +209,13 @@ void executarDiretiva(struct item *pItem, struct item *listaItens, struct rotulo
 			delItemLista(listaItens, pItem->prox); //deleta o proximo item da lista. (ele contem o valor do .align)
 		break;
 		case WORD:
-			executarWord(listaRotulos, pontoDeMontagem);
+			executarWord(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras);
 			delItemLista(listaItens, pItem->prox); //deleta o proximo item da lista. (ele contem o valor do .word)
 		break;
 		case WFILL:
-
+			executarWFill(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras);
+			delItemLista(listaItens, pItem->prox->prox); //deleta o proximo item da lista. (contem arg 2 do wfill)
+			delItemLista(listaItens, pItem->prox); //deleta o proximo item da lista. (contem o arg 1 do wfill
 		break;
 	}
 }

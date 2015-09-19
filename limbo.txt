@@ -1,0 +1,43 @@
+/* Trata o campo em funcão de seu tipo */
+			switch(tipoCampo) {
+				case ROTULO:
+					formatarRotulo(token);
+					pRotulo = malloc(sizeof(struct rotulo));
+					strcpy(pRotulo->nome, token);
+					pRotulo->pos = pontoDeMontagem;    // DEBUG - ficar atento a modificacacoes no codigo q zoam aqui
+					pRotulo->prox = NULL;
+					adicionarLista(&listaRotulos, pRotulo);
+				break;
+				case DIRETIVA:
+					if( strcmp(token, ".org") == 0) {
+						while(ehHexadecimal(tokenAux, tamAux) != true || ehDecimal(tokenAux, tamAux) != true);
+						
+						tamAux = tirarNewLine(&tokenAux, tamAux);
+						/* Se for um número hexadecimal */
+						if(ehHexadecimal(tokenAux, tamAux)) {
+
+						}
+						/* Se for um numero decimal */
+						else if(ehDecimal(tokenAux, tamAux)) {
+
+						}
+						/* Não é um numero nem decimal nem hexadecimal */
+						else {
+							printf("ERROR on line %d\n", linhaAtual);
+							printf("Campo de entrada da diretiva .org inválido\n");
+						}
+					}
+				break;
+				case INSTRUCAO:
+
+				break;
+				case DECIMAL:
+
+				break;
+				case HEXADECIMAL:
+
+				break;
+				default:
+
+				break;
+			}
