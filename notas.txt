@@ -4,18 +4,30 @@ colocar o LOAD em uma pilha, pois aí quando ele ler o numero ele vai procurar n
 
 - UMA PALAVRA É UM STRUCT. ELA CONTEM OUTROS 2 STRUCTS QUE SAO AS INSTRUCOES DA ESQUERDA E DIREITA, MARCADOS POR UMA FLAG. ELAS CONTEM OPCODE E ENDERECO. OU WORD, NO CASO DE UM NUMERO. TEM QUE CONTER TAMBEM A POSICAO DE MEMORIA.
 
+- a checagem para .set deve ocorre no início ou no final do programa porque a pessoa pode usar um rotulo antes de declarar ele.
+
+/* Possiveis Bugs */
+o enunciado diz que todo caractere à direita de um # é considerado comentario. Mas o programa só percebe o caractere # quando ele está envolto por espaços. Se estiver justaposto a uma palavra o programa nao consegue perceber.
+- Mesmo motivo do bug do # acima. O programa só ignora o tab \t  quando não há varios tab seguidos. Quando há mais de 1 seguido os tabs vao pra lista ligada de itens */
 
 /* A implementar */
 - as entradas de numeros com aspas tipo "0x0054" precisa ser tratada
+- tratar TAB no token
+- considerar que a diretiva .set tambem deve substituir quando tiver tipo "ronaldo". Atualmente só compara as palavras caso a palavra seja exatamente igual, sem considerar aspas
+- O tamanho de um monte de vetor está como 64. Mas isso é errado porque estou esquecendo de considerar o \0. Mudar para 65
 
 /* Lembretes */
 - não esquecer de fechar arquivos
 - liberar memória
 - ficar antento pra ver se de fato o arquivo de entrada coube no vetor buffer
 - parametros do zanoni
+- passar valgrind
 - fechar programa com exit(-1)
 
 
 /* Mandar coisas pro git */
 git add .
 git commit -m 'Implementada indentificacao de tipos de campo'
+
+/* Valgrind */
+valgrind -v --leak-check=yes --leak-check=full --track-origins=yes --show-reachable=yes ./main teste.txt

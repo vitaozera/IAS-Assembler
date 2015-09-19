@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include "maestro.h"
 #include "numbers.h"
+#include "diretivas.h"
+#include "rotulos.h"
 
 struct rotulo {
 	char nome[64];
@@ -11,33 +13,53 @@ struct rotulo {
 	struct rotulo *prox;
 };
 
+struct item {
+	char campo[64];
+	int tipo;
+	int linha;
+	struct item *prox;
+};
 
-/* Analisa as linhas de comando do arquivo */
+// DEBUG - depois passar para o .h (junto com todas outras funcoes do arquivo .c)
+void addListaItens(struct item *listaItens, char campo[], int tipo, int linha);
+void freeListaItens(struct item *p);
+
+/* Analisa as linhas de comando do arquivo e executa operações em cima disso */
 void Orquestrador(FILE* file) {
 
 	int linhaAtual, i, j;
-	int tam;
+	int tam, tamAux;
 	int tipoCampo;
+	int pontoDeMontagem = 0x000;
 	char buffer[BUFFERSIZE];
 	char temp[BUFFERSIZE], aux;
-	char *token;
+	char *token, *tokenAux;
 	struct rotulo listaRotulos;
+	struct item listaItens, *pItem;
+	struct rotulo *pRotulo;
 
 	/* Lê linha por linha e realiza as operacões necessarias contidas nela */
-	linhaAtual = 0;
+	linhaAtual = 1;
 
 	/* Inicializa a cabeca da lista ligada de rótulos */
 	strcpy(listaRotulos.nome, "cabeca");
+	listaRotulos.pos = -001;
 	listaRotulos.prox = NULL;
+	
+	/* Inicializa a cabeca da lista ligada de itens */
+	strcpy(listaItens.campo, "cabeca");
+	listaItens.linha = -1;
+	listaItens.tipo = -1;
+	listaItens.prox = NULL;
 	
 	// enquanto houver linhas
 	while( fgets(buffer, sizeof(buffer), file) ) {
 		
 		/* Separa as palavras com base nos espacos e as analisa*/
-		token = strtok(buffer, " ");
+		token = strtok(buffer, " \t");
 		while(token != NULL) {
 			/* Se encontrar um marcador # de comentario ou o fim de uma linha, seguir para a próxima linha */
-			if( strcmp(token, "#") == 0 || strcmp(token, "\n") == 0)
+			if( strcmp(token, "#") == 0 || strcmp(token, "\n") == 0  || strcmp(token, "\t") == 0)
 				break;
 
 			/* Tira um '\n' do final, se existir */
@@ -46,28 +68,9 @@ void Orquestrador(FILE* file) {
 
 			/* Identifica o tipo do campo */
 			tipoCampo = identificarTipo(token, tam);
-
-			/* Trata o campo em funcão de seu tipo */
-			switch(tipoCampo) {
-				case ROTULO:
-					// adicionar rotulo na lista ligada
-				break;
-				case DIRETIVA:
-
-				break;
-				case INSTRUCAO:
-
-				break;
-				case DECIMAL:
-
-				break;
-				case HEXADECIMAL:
-
-				break;
-				default:
-
-				break;
-			}
+			
+			/* Coloca todos items, que contém os campos, em uma lista ligada */
+			addListaItens(&listaItens, token, tipoCampo, linhaAtual);
 
 			/* Pega a próxima palavra */
 			token = strtok(NULL, " ");
@@ -75,48 +78,102 @@ void Orquestrador(FILE* file) {
 
 		linhaAtual++;
 	}
+	// Nesse ponto todas linhas do arquivo foram lidas e suas informações estão na listaItens
+
+	/* Executa as diretivas .set */
+	diretivaSet(&listaItens);
+
+	/* Analisa cada item da lista ligada de itens e executa ações de acordo com seu tipo */
+	pItem = &listaItens;
+	while(pItem != NULL) {
+		switch(pItem->tipo) {
+			case ROTULO:
+				addListaRotulo(&listaRotulos, pItem, pontoDeMontagem);
+			break;
+			case DIRETIVA:
+				executarDiretiva(pItem, &listaRotulos, &pontoDeMontagem);
+			break;
+			case INSTRUCAO:
+
+			break;
+			case DECIMAL:
+				//DEBUG provavelmente nao é necessario tratar
+			break;
+			case HEXADECIMAL:
+				//DEBUG provavelmente nao é necessario tratar
+			break;
+			default:
+
+			break;
+		}
+		printf("pontoDeMontagem: %x\n", pontoDeMontagem);
+		pItem = pItem->prox;
+	}
+
+	/* Imprime a lista de itens */
+	struct item *p;
+	p = &listaItens;
+	while(p != NULL) {
+		printf("%s\n", p->campo);
+		p = p->prox;
+	}
+
+	/* Imprime a lista de rotulos */
+	struct rotulo *r;
+	r = listaRotulos.prox;
+	while(r != NULL) {
+		printf("rot: %s | mem: %x\n", r->nome, r->pos);
+		r = r->prox;
+	}
+
+	/* Libera a memória da lista de itens. A partir da cabeça */
+	freeListaItens(listaItens.prox);
+
+	/* Libera a memória da lista de rótulos. A partir da cabeça */
+	freeListaRotulos(listaRotulos.prox);
 }
 
-bool ehInstrucao(char campo[]) {
+/* Adiciona um item à lista ligada de itens */
+void addListaItens(struct item *listaItens, char campo[], int tipo, int linha) {
+	struct item *p;
 
-	if( strcmp(campo, "LD") == 0)
-		return true;
-	if( strcmp(campo, "LD-") == 0)
-		return true;
-	if( strcmp(campo, "LD|") == 0)
-		return true;
-	if( strcmp(campo, "LDmq") == 0)
-		return true;
-	if( strcmp(campo, "LDmq_mx") == 0)
-		return true;
-	if( strcmp(campo, "ST") == 0)
-		return true;
-	if( strcmp(campo, "JMP") == 0)
-		return true;
-	if( strcmp(campo, "JUMP+") == 0)
-		return true;
-	if( strcmp(campo, "ADD") == 0)
-		return true;
-	if( strcmp(campo, "ADD|") == 0)
-		return true;
-	if( strcmp(campo, "SUB") == 0)
-		return true;
-	if( strcmp(campo, "SUB|") == 0)
-		return true;
-	if( strcmp(campo, "MUL") == 0)
-		return true;
-	if( strcmp(campo, "DIF") == 0)
-		return true;
-	if( strcmp(campo, "LSH") == 0)
-		return true;
-	if( strcmp(campo, "RSH") == 0)
-		return true;
-	if( strcmp(campo, "STaddr") == 0)
-		return true;
-
-	return false;
+	p = listaItens;
+  
+	/* Vai até a última posicao da lista */
+	while(p->prox != NULL) {
+		p = p->prox;
+	}
+	
+	p->prox = malloc(sizeof(struct item));
+	
+	strcpy(p->prox->campo, campo);
+	p->prox->tipo = tipo;
+	p->prox->linha = linha;  
+	p->prox->prox = NULL;
 }
 
+void freeListaItens(struct item *p) {
+	if(p->prox != NULL) {
+		freeListaItens(p->prox);
+	}
+	free(p);
+}
+
+void delItemLista(struct item *listaItens, struct item *morto) {
+	struct item *p, *temp;
+
+	p = listaItens;
+	while(p != NULL) {
+		/* Se o morto foi achado na lista */
+		if(p == morto) {
+			temp = morto->prox;
+			free(morto);
+			p->prox = temp;
+			return;
+		}
+		p = p->prox;
+	}
+}
 
 /* Identifica qual o tipo (instrucao, rotulo, diretiva... */
 int identificarTipo(char campo[], int tam) {
