@@ -12,6 +12,13 @@ void addListaItens(struct item *listaItens, char campo[], int tipo, int linha);
 void freeListaItens(struct item *p);
 void freeListaPalavras(struct palavra *p);
 
+char *formatarAspas(char *token, int tam) {
+	/* Tira as aspas do final */
+	token[tam-1] = '\0';
+	/* Tira as aspas do começo */
+	return token +1;
+}
+
 /* Analisa as linhas de comando do arquivo e executa operações em cima disso */
 void Orquestrador(FILE* file) {
 
@@ -64,6 +71,19 @@ void Orquestrador(FILE* file) {
 
 			/* Identifica o tipo do campo */
 			tipoCampo = identificarTipo(token, tam);
+			/* Se o campo estiver entre aspas tenta identificá-lo de novo */
+			if(tipoCampo == ENTRE_ASPAS) {
+				token = formatarAspas(token, tam);
+				tam -= 2;
+				tipoCampo = identificarTipo(token, tam);
+				/* Caso mesmo assim o campo não tenha sido identificado verifica se o campo é
+				um rótulo entre aspas, como ocorre com as instrucões */
+				if(tipoCampo == -1) {
+					/* Marca o campo estranho como não identificado. Ele será identificado mais tarde,
+					caso seja necessário usá-lo */
+					tipoCampo = DESCONHECIDO;
+				}
+			}
 			
 			/* Coloca todos items, que contém os campos, em uma lista ligada */
 			addListaItens(&listaItens, token, tipoCampo, linhaAtual);
@@ -120,7 +140,7 @@ void Orquestrador(FILE* file) {
 	struct rotulo *r;
 	r = listaRotulos.prox;
 	while(r != NULL) {
-		printf("rotulo: %s | mem: %d\n", r->nome, r->pos);
+		printf("rotulo: %s | mem: %X\n", r->nome, r->pos);
 		r = r->prox;
 	}
 	printf("\n");
@@ -164,14 +184,14 @@ void addListaItens(struct item *listaItens, char campo[], int tipo, int linha) {
 }
 
 void freeListaItens(struct item *p) {
-	if(p->prox != NULL) {
+	if(p != NULL) {
 		freeListaItens(p->prox);
 	}
 	free(p);
 }
 
 void freeListaPalavras(struct palavra *p) {
-	if(p->prox != NULL) {
+	if(p != NULL) {
 		freeListaPalavras(p->prox);
 	}
 	free(p);
@@ -217,8 +237,12 @@ int identificarTipo(char campo[], int tam) {
 	else if(ehInstrucao(campo)) {
 		return INSTRUCAO;
 	}
+	/* Verifica se o campo é algo entre aspas */
+	else if(campo[0] == '"' && campo[tam-1] == '"') {
+		return ENTRE_ASPAS;
+	}
 
-	return 0;
+	return -1;
 }
 
 /* Tira '\n' da última posicão, se existir */

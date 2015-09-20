@@ -1,9 +1,8 @@
-vetor1:
-vetor2:   .word 10
-vetor3:   .word 10
+.org 0x0000000101
+JMP "0x0000000400"
 
-.word 10
-.word 10
-
-
-vetor4: 
+loop1:
+	JMP "loop1"
+	.align 2
+loop2:
+	JMP "loop2"

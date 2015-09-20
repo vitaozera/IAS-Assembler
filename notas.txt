@@ -1,10 +1,8 @@
-/* Ideias */
--Talvez seja interessante, quando o programa ler um comando que precisa de outro, tipo LOAD, que precisa do numero,
-colocar o LOAD em uma pilha, pois aí quando ele ler o numero ele vai procurar na pilha se existe alguem ou se o numero vai ficar sozinho na memoria.
+/* ONDE PAREI */
+- tava tendo uma treta na hora de instrucoes lerem o campo seguinte quando ele é rótulo. Eu fiz modificacoes no maestro.c criando o tipo desconhecido (usado no orquestrador e identificarTipo) e instrucoes.c e preencherInstrucao
 
-- UMA PALAVRA É UM STRUCT. ELA CONTEM OUTROS 2 STRUCTS QUE SAO AS INSTRUCOES DA ESQUERDA E DIREITA, MARCADOS POR UMA FLAG. ELAS CONTEM OPCODE E ENDERECO. OU WORD, NO CASO DE UM NUMERO. TEM QUE CONTER TAMBEM A POSICAO DE MEMORIA.
-
-- a checagem para .set deve ocorre no início ou no final do programa porque a pessoa pode usar um rotulo antes de declarar ele.
+/* Bugs */
+CASOS 5, 8, 5, 4 e muitos outros....
 
 /* Possiveis Bugs */
 o enunciado diz que todo caractere à direita de um # é considerado comentario. Mas o programa só percebe o caractere # quando ele está envolto por espaços. Se estiver justaposto a uma palavra o programa nao consegue perceber.
@@ -13,8 +11,6 @@ o enunciado diz que todo caractere à direita de um # é considerado comentario.
 -talvez o freelistaSet esteja errado. Ele deveria mesmo considerar p->prox ? nao deveria ser igual o free lista rotulo ?
 
 /* A implementar */
-- as entradas de numeros com aspas tipo "0x0054" precisa ser tratada
-- tratar TAB no token
 - considerar que a diretiva .set tambem deve substituir quando tiver tipo "ronaldo". Atualmente só compara as palavras caso a palavra seja exatamente igual, sem considerar aspas
 - O tamanho de um monte de vetor está como 64. Mas isso é errado porque estou esquecendo de considerar o \0. Mudar para 65
 - FALTA IMPLEMENTAR O CASO DO TIPO .WORD ROTULO: fiz uma marcacao com // DEBUG no diretivas.c
@@ -31,6 +27,7 @@ o enunciado diz que todo caractere à direita de um # é considerado comentario.
 /* Mandar coisas pro git */
 git add .
 git commit -m 'Implementada indentificacao de tipos de campo'
+git push origin master
 
 /* Valgrind */
 valgrind -v --leak-check=yes --leak-check=full --track-origins=yes --show-reachable=yes ./main teste.txt

@@ -149,8 +149,12 @@ void executarAlign(int *pontoDeMontagem, int i) {
 	k = *pontoDeMontagem / i;
 	k = k * i;
 
+	printf("PONTO: %x\n", *pontoDeMontagem);
+
 	/* Salva o próximo múltiplo no ponto de montagem */
 	*pontoDeMontagem = k + i;
+
+	printf("PONTO: %x\n", *pontoDeMontagem);
 }
 
 void executarWord(struct item *pItem, struct rotulo *listaRotulos,
@@ -168,10 +172,10 @@ void executarWord(struct item *pItem, struct rotulo *listaRotulos,
 	p->prox = malloc(sizeof(struct palavra));
 	/* Numero de entrada em decimal */
 	if(pItem->tipo == DECIMAL) {
-		snprintf(p->prox->campo1, TAM_PALAVRA, "%X", atoi(pItem->campo));
+		snprintf(p->prox->campo1, TAM_PALAVRA, "%010X", atoi(pItem->campo));
 	}
 	/* Numero de entrada em hexadecimal */
-	else if(pItem->tipo == HEXADECIMAL){
+	else if(pItem->tipo == HEXADECIMAL) {
 		strcpy(p->prox->campo1, pItem->campo+2);
 	}
 	/* Numero de entrada em rótulo */
@@ -179,7 +183,7 @@ void executarWord(struct item *pItem, struct rotulo *listaRotulos,
 		formatarRotulo(pItem->campo);
 		
 		pos = buscarValorRotulo(listaRotulos, pItem->campo);
-		snprintf(p->prox->campo1, TAM_PALAVRA, "%X", pos);
+		snprintf(p->prox->campo1, TAM_PALAVRA, "%010X", pos);
 	}
 	p->prox->campo2[0] = '\0';
 	p->prox->pos = *pontoDeMontagem;
