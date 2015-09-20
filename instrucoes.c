@@ -1,42 +1,64 @@
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include "instrucoes.h"
 
-bool ehInstrucao(char campo[]) {
+int indentificarInstrucao(char campo[]) {
 
 	if( strcmp(campo, "LD") == 0)
-		return true;
+		return LD;
 	if( strcmp(campo, "LD-") == 0)
-		return true;
+		return LDmenos;
 	if( strcmp(campo, "LD|") == 0)
-		return true;
+		return LDmod;
 	if( strcmp(campo, "LDmq") == 0)
-		return true;
+		return LDmq;
 	if( strcmp(campo, "LDmq_mx") == 0)
-		return true;
+		return LDmq_mx;
 	if( strcmp(campo, "ST") == 0)
-		return true;
+		return ST;
 	if( strcmp(campo, "JMP") == 0)
-		return true;
+		return JMP;
 	if( strcmp(campo, "JUMP+") == 0)
-		return true;
+		return JUMPmais;
 	if( strcmp(campo, "ADD") == 0)
-		return true;
+		return ADD;
 	if( strcmp(campo, "ADD|") == 0)
-		return true;
+		return ADDmod;
 	if( strcmp(campo, "SUB") == 0)
-		return true;
+		return SUB;
 	if( strcmp(campo, "SUB|") == 0)
-		return true;
+		return SUBmod;
 	if( strcmp(campo, "MUL") == 0)
-		return true;
+		return MUL;
 	if( strcmp(campo, "DIF") == 0)
-		return true;
+		return DIF;
 	if( strcmp(campo, "LSH") == 0)
-		return true;
+		return LSH;
 	if( strcmp(campo, "RSH") == 0)
-		return true;
+		return RSH;
 	if( strcmp(campo, "STaddr") == 0)
-		return true;
+		return STaddr;
+	return -1; //instrucao nao existe
+}
 
-	return false;
+bool ehInstrucao(char campo[]) {
+	int instrucao = indentificarInstrucao(campo);
+
+	if(instrucao == -1)
+		return false;
+	else
+		return true;
+}
+
+void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotulo *listaRotulos,
+	int *pontoDeMontagem, struct palavra *listaPalavras) {
+	int tipoInstrucao;
+
+	tipoInstrucao = indentificarInstrucao(pItem->campo);
+
+	if(tipoInstrucao == RSH) {
+		// Falta implementar
+	}
+
 }

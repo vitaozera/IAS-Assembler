@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include "numbers.h"
 
@@ -37,4 +38,9 @@ bool ehHexadecimal(char campo[], int tam) {
 	}
 
 	return true;
+}
+
+/* Converte um número decimal para hexadecimal */
+void decimal2Hex(char *hex, char *dec) {
+	snprintf(hex, 64, "%X", atoi(dec));
 }

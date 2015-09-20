@@ -90,13 +90,13 @@ void Orquestrador(FILE* file) {
 				executarDiretiva(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, &listaPalavras);
 			break;
 			case INSTRUCAO:
-
+				executarInstrucao(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, &listaPalavras);
 			break;
 			case DECIMAL:
-				//DEBUG provavelmente nao é necessario tratar
+				//DEBUG provavelmente nao é necessario tratar. Ou talvez seja bom pra dizer q deu erro
 			break;
 			case HEXADECIMAL:
-				//DEBUG provavelmente nao é necessario tratar
+				//DEBUG provavelmente nao é necessario tratar.  Ou talvez seja bom pra dizer q deu erro
 			break;
 			default:
 

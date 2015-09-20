@@ -2,6 +2,8 @@ vetor1:
 vetor2:   .word 10
 vetor3:   .word 10
 
-.wfill 4 0x5
+.word 10
+.word 10
 
-vetor4:   .word 10
+
+vetor4: 

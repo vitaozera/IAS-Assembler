@@ -4,7 +4,7 @@
 
 struct rotulo {
 	char nome[64];
-	int pos; // posicao assiciada. Em hexadecimal
+	int pos; // posicao assiciada
 	struct rotulo *prox;
 };
 
@@ -48,4 +48,17 @@ void freeListaRotulos(struct rotulo *listaRotulos) {
 	if(listaRotulos != NULL)
 		freeListaRotulos(listaRotulos->prox);
 	free(listaRotulos);
+}
+
+int buscarValorRotulo(struct rotulo *listaRotulos, char *nome) {
+	struct rotulo *p;
+
+	p = listaRotulos;
+
+	while(p != NULL) {
+		if( strcmp(p->nome, nome) == 0 )
+			return p->pos;
+		p = p->prox;
+	}
+	return -1;
 }

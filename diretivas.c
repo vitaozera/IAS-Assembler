@@ -58,7 +58,7 @@ void freeListaSet(struct diretivaSet *p) {
 void executarSet(struct item *listaItens, struct diretivaSet *listaSet) {
 	struct item *pItem;
 	struct diretivaSet *pSet;
-	char *campo, *valor;
+	char *campo, *valor, numero_hex[64];
 	
 	/* Compara todos os elementos da lista set e lista itens e troca os campos por valor */
 	pSet = listaSet;
@@ -67,7 +67,12 @@ void executarSet(struct item *listaItens, struct diretivaSet *listaSet) {
 		while(pItem != NULL) {
 			if(strcmp(pSet->campo, pItem->campo) == 0) {
 				/* Troca o valor */
-				strcpy(pItem->campo, pSet->valor);
+				if(ehHexadecimal(pSet->valor, strlen(pSet->valor)))
+					strcpy(pItem->campo, pSet->valor+2);             //o número +2 ignora o "0x" do começo
+				else if(ehDecimal(pSet->valor, strlen(pSet->valor))){
+					decimal2Hex(numero_hex, pSet->valor);
+					strcpy(pItem->campo, numero_hex);  
+				}
 			}
 			pItem = pItem->prox;
 		}
@@ -89,7 +94,7 @@ void diretivaSet(struct item *listaItens) {
 	
 	p = listaItens;
 	pAnterior = NULL;
-	/* Percorre a lista de itens em busca dos .set, tira eles ta listaItens e os coloca na listaSet */
+	/* Percorre a lista de itens em busca dos .set, tira eles da listaItens e os coloca na listaSet */
 	while(p!= NULL) {
 		if(strcmp(p->campo, ".set") == 0) {
 			strcpy(campo, p->prox->campo); // recebe o campo do .set
@@ -150,7 +155,7 @@ void executarAlign(int *pontoDeMontagem, int i) {
 
 void executarWord(struct item *pItem, struct rotulo *listaRotulos,
  int *pontoDeMontagem, struct palavra *listaPalavras) {
-	char pos[10]; //posicão do rótulo, caso haja
+	int pos; //posicão do rótulo, caso haja
 	struct palavra *p;
 
 	/* Vai até o fim da lista ligada de palavras */
@@ -161,12 +166,20 @@ void executarWord(struct item *pItem, struct rotulo *listaRotulos,
 
 	/* Coloca o numero na lista ligada de palavras */
 	p->prox = malloc(sizeof(struct palavra));
-	if(pItem->tipo = DECIMAL)
-		strcpy(p->prox->campo1, pItem->campo);
-	else if(pItem->tipo = HEXADECIMAL)
+	/* Numero de entrada em decimal */
+	if(pItem->tipo == DECIMAL) {
+		snprintf(p->prox->campo1, TAM_PALAVRA, "%X", atoi(pItem->campo));
+	}
+	/* Numero de entrada em hexadecimal */
+	else if(pItem->tipo == HEXADECIMAL){
 		strcpy(p->prox->campo1, pItem->campo+2);
-	else if(pItem->tipo = ROTULO) {
-		//DEBUG FALTA IMPLEMENTAR O CASO DO TIPO .WORD ROTULO:
+	}
+	/* Numero de entrada em rótulo */
+	else if(pItem->tipo == ROTULO) {
+		formatarRotulo(pItem->campo);
+		
+		pos = buscarValorRotulo(listaRotulos, pItem->campo);
+		snprintf(p->prox->campo1, TAM_PALAVRA, "%X", pos);
 	}
 	p->prox->campo2[0] = '\0';
 	p->prox->pos = *pontoDeMontagem;
@@ -181,7 +194,6 @@ void executarWFill(struct item *pItem, struct rotulo *listaRotulos,
 	int i, j;
 
 	i = atoi(pItem->campo);
-	printf("Valor de i:%d  |  Campo:%s\n", i, pItem->campo);
 
 	/* manda rodar i vezes a diretiva .word */
 	for(j = 0; j < i; j++) {
@@ -189,10 +201,22 @@ void executarWFill(struct item *pItem, struct rotulo *listaRotulos,
 	}
 }
 
+void executarOrg(char *valor_hex,char *valor, int *pontoDeMontagem) {
+
+	if(ehHexadecimal(valor, strlen(valor))) {
+		*pontoDeMontagem = strtol(valor, NULL, 16); // representa o valor em hexa(char[]) como int
+	}
+	else if(ehDecimal(valor, strlen(valor))) {
+		*pontoDeMontagem = strtol(valor, NULL, 10); // representa o valor em decimal(char[]) como int
+	}
+
+}
+
 /* Executa todos tipo de diretiva, exceto a .set que é executada por diretivaSet() */
 void executarDiretiva(struct item *pItem, struct item *listaItens, struct rotulo *listaRotulos,
  int *pontoDeMontagem, struct palavra *listaPalavras) {
 	int tipoDiretiva, multiplo;
+	char valor_hex[64];
 
 	/* Identifica o tipo de diretiva */
 	tipoDiretiva = identificarDiretiva(pItem);
@@ -200,7 +224,7 @@ void executarDiretiva(struct item *pItem, struct item *listaItens, struct rotulo
 	/* Toma a decisão correspondente ao tipo de diretiva */
 	switch(tipoDiretiva) {
 		case ORG:
-			*pontoDeMontagem = atoi(pItem->prox->campo);
+			executarOrg(valor_hex, pItem->prox->campo, pontoDeMontagem);
 			delItemLista(listaItens, pItem->prox); //deleta o proximo item da lista. (ele contem o valor do .org)
 		break;
 		case ALIGN:
