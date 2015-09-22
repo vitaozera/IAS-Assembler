@@ -220,7 +220,7 @@ void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotul
 	preencherInstrucao(campo, tipoInstrucao, pItem->prox, ladoInstrucao, listaRotulos);
 
 
-	// DEBUG deletar o proximo cara da lista de itens
+	//DEBUG deletar o proximo cara da lista de itens. pode ser isso que ta dando bug
 
 }
 

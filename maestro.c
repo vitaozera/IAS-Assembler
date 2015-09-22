@@ -10,7 +10,6 @@
 // DEBUG - depois passar para o .h (junto com todas outras funcoes do arquivo .c)
 void addListaItens(struct item *listaItens, char campo[], int tipo, int linha);
 void freeListaItens(struct item *p);
-void freeListaPalavras(struct palavra *p);
 
 char *formatarAspas(char *token, int tam) {
 	/* Tira as aspas do final */
@@ -20,7 +19,7 @@ char *formatarAspas(char *token, int tam) {
 }
 
 /* Analisa as linhas de comando do arquivo e executa operações em cima disso */
-void Orquestrador(FILE* file) {
+void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 
 	int linhaAtual, i, j;
 	int tam, tamAux;
@@ -32,7 +31,6 @@ void Orquestrador(FILE* file) {
 	struct rotulo listaRotulos;
 	struct item listaItens, *pItem;
 	struct rotulo *pRotulo;
-	struct palavra listaPalavras;
 
 	/* Lê linha por linha e realiza as operacões necessarias contidas nela */
 	linhaAtual = 1;
@@ -47,13 +45,6 @@ void Orquestrador(FILE* file) {
 	listaItens.linha = -1;
 	listaItens.tipo = -1;
 	listaItens.prox = NULL;
-
-	/* Inicializa a cabeca da lista ligada de palavras */
-	strcpy(listaPalavras.campo1, "cabeca");
-	strcpy(listaPalavras.campo2, "cabeca");
-	listaPalavras.pos = -1;
-	listaPalavras.tipo = -1;
-	listaPalavras.prox = NULL;
 
 	// enquanto houver linhas
 	while( fgets(buffer, sizeof(buffer), file) ) {
@@ -107,10 +98,10 @@ void Orquestrador(FILE* file) {
 				addListaRotulo(&listaRotulos, pItem, pontoDeMontagem);
 			break;
 			case DIRETIVA:
-				executarDiretiva(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, &listaPalavras);
+				executarDiretiva(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, listaPalavras);
 			break;
 			case INSTRUCAO:
-				executarInstrucao(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, &listaPalavras);
+				executarInstrucao(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, listaPalavras);
 			break;
 			case DECIMAL:
 				//DEBUG provavelmente nao é necessario tratar. Ou talvez seja bom pra dizer q deu erro
@@ -148,9 +139,9 @@ void Orquestrador(FILE* file) {
 	/* Imprime a lista de palavras */
 	printf("LISTA DE PALAVRAS:\n");
 	struct palavra *s;
-	s = &listaPalavras;
+	s = listaPalavras;
 	while(s != NULL) {
-		printf("campo1: %s | campo2: %s | tipo: %d   |  mem: %d\n", s->campo1, s->campo2, s->tipo, s->pos);
+		printf("campo1: %s | campo2: %s | tipo: %d   |  mem: %03X\n", s->campo1, s->campo2, s->tipo, s->pos);
 		s = s->prox;
 	}
 
@@ -160,8 +151,6 @@ void Orquestrador(FILE* file) {
 	/* Libera a memória da lista de rótulos. A partir da cabeça */
 	freeListaRotulos(listaRotulos.prox);
 
-	/* Libera a memória da lista de palavras. A partir da cabeça */
-	freeListaPalavras(listaPalavras.prox);
 }
 
 /* Adiciona um item à lista ligada de itens */
@@ -186,13 +175,6 @@ void addListaItens(struct item *listaItens, char campo[], int tipo, int linha) {
 void freeListaItens(struct item *p) {
 	if(p != NULL) {
 		freeListaItens(p->prox);
-	}
-	free(p);
-}
-
-void freeListaPalavras(struct palavra *p) {
-	if(p != NULL) {
-		freeListaPalavras(p->prox);
 	}
 	free(p);
 }

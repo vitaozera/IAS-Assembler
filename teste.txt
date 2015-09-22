@@ -1,8 +1,15 @@
-.org 0x0000000101
-JMP "0x0000000400"
-
-loop1:
-	JMP "loop1"
-	.align 2
-loop2:
-	JMP "loop2"
+inicio:
+LD "10"
+LD- "10"
+LD| "10"
+LD| "10"
+LDmq_mx "10"
+ST "10"
+ADD "inicio"
+ADD| "10"
+SUB "0x000000000A"
+SUB| "0x000000000A" 
+MUL "0x000000000A" 
+DIV "0x000000000A" 
+LSH
+RSH

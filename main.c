@@ -8,11 +8,23 @@
 #include <string.h>
 #include <stdbool.h>
 #include "maestro.h"
+#include "main.h"
+
+void imprimirMapa(struct palavra *listaPalavras, char *argv[]);
+void freeListaPalavras(struct palavra *p);
 
 int main(int argc, char *argv[] ) {
 	char* nomeEntrada;
 	char* nomeSaida = NULL;
 	int linhaAtual;
+	struct palavra listaPalavras;
+
+	/* Inicializa a cabeca da lista ligada de palavras */
+	strcpy(listaPalavras.campo1, "cabeca");
+	strcpy(listaPalavras.campo2, "cabeca");
+	listaPalavras.pos = -1;
+	listaPalavras.tipo = -1;
+	listaPalavras.prox = NULL;
 
 	/* Armazena o nome de entrada (primeiro argumento) */
 	if(argc < 2 || argc > 3) {
@@ -30,7 +42,7 @@ int main(int argc, char *argv[] ) {
 	/* Abre o arquivo de entrada e chama o Orquestrador */
 	FILE* file = fopen(nomeEntrada, "r");
 	if( file != NULL) {
-		Orquestrador(file);
+		Orquestrador(file, &listaPalavras);
 		fclose(file);
 	}
 	else {
@@ -38,5 +50,53 @@ int main(int argc, char *argv[] ) {
 		exit(-1);
 	}
 
+	imprimirMapa(&listaPalavras, argv);
+
+	/* Libera a memória da lista de palavras. A partir da cabeça */
+	freeListaPalavras(listaPalavras.prox);
+
 	return 0;
+}
+
+void freeListaPalavras(struct palavra *p) {
+	if(p != NULL) {
+		freeListaPalavras(p->prox);
+	}
+	free(p);
+}
+
+void imprimirMapa(struct palavra *listaPalavras, char *argv[]) {
+	struct palavra *p;
+	FILE *file;
+
+	/* Se houver um arquivo de saida */
+	if(argv[2] != NULL) {
+		file = fopen(argv[2], "w");
+	}
+
+	p = listaPalavras->prox;
+		while(p != NULL) {
+			/* Se houver um arquivo de saida */
+			if(argv[2] != NULL) {
+				/* Se forem instrucoes */
+				if( p->tipo == INSTRUCOES) {
+				fprintf(file, "%03X %c%c %c%c %c%c %c%c %c%c\n",
+					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					 p->campo2[0], p->campo2[1], p->campo2[2], p->campo2[3], p->campo2[4]);
+				}
+				/* Se for um numero em hexa */
+				else if(p->tipo == NUMERO_HEXA) {
+					fprintf(file, "%03X %c%c %c%c %c%c %c%c %c%c\n",
+					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					 p->campo1[5], p->campo1[6], p->campo1[7], p->campo1[8], p->campo1[9]);
+				}
+			}
+			/* Se NÃO houver um arquivo de saida */
+			else {
+				printf("%03X %c%c %c%c %c%c %c%c %c%c\n",
+					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					 p->campo2[0], p->campo2[1], p->campo2[2], p->campo2[3], p->campo2[4]);
+			}
+			p = p->prox;
+		}
 }

@@ -3,6 +3,8 @@
 
 /* Bugs */
 CASOS 5, 8, 5, 4 e muitos outros....
+erro no valgrind. teste t20.txt
+diretiva align nao deve mudar posicao quando ja esta num multiplo
 
 /* Possiveis Bugs */
 o enunciado diz que todo caractere à direita de um # é considerado comentario. Mas o programa só percebe o caractere # quando ele está envolto por espaços. Se estiver justaposto a uma palavra o programa nao consegue perceber.

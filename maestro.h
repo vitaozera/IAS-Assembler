@@ -21,6 +21,6 @@ struct palavra {
 	struct palavra *prox;
 };
 
-void Orquestrador(FILE* file);
+void Orquestrador(FILE* file, struct palavra *listaPalavras);
 bool ehInstrucao(char campo[]);
 int identificarTipo(char campo[], int tam);
