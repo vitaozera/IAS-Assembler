@@ -56,7 +56,7 @@ void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int 
 	int tam, pos;
 	char aux[4];
 
-	if(tipoInstrucao == LD) {
+	if(tipoInstrucao  == LD) {
 		campo[0] = '0';
 		campo[1] = '1';
 	}
@@ -82,20 +82,11 @@ void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int 
 	}
 	else if(tipoInstrucao == JMP) {
 		campo[0] = '0';
-		if(ladoInstrucao == ESQUERDA)
-			campo[1] = 'D';
-		if(ladoInstrucao == DIREITA)
-			campo[1] = 'E';
+		campo[1] = 'D';
 	}
 	else if(tipoInstrucao == JUMPmais) {
-		if(ladoInstrucao == ESQUERDA) {
-			campo[0] = '0';
-			campo[1] = 'F';
-		}
-		if(ladoInstrucao == DIREITA) {
-			campo[0] = '1';
-			campo[1] = '0';
-		}
+		campo[0] = '0';
+		campo[1] = 'F';
 	}
 	else if(tipoInstrucao == ADD) {
 		campo[0] = '0';
@@ -132,23 +123,8 @@ void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int 
 		return;
 	}
 	else if(tipoInstrucao == STaddr) {
-		if(ladoInstrucao == ESQUERDA) {
-			campo[0] = '1';
-			campo[1] = '2';
-		}
-		if(ladoInstrucao == DIREITA) {
-			campo[0] = '1';
-			campo[1] = '3';
-		}
-	}
-
-	/* É possivel, nos casos onde a entrada da instrucao é um rotulo, 
-	que o campo ainda nao esteja com o tipo identificado. Nesse caso, é preciso
-	identificá-lo */
-	if(pItem->tipo == DESCONHECIDO) {
-		if(buscarValorRotulo(listaRotulos, pItem->campo) != -1) {
-			pItem->tipo = ROTULO;
-		}
+		campo[0] = '1';
+		campo[1] = '2';
 	}
 
 	/* Coloca a parte do endereço. pode ser rotulo, hexa ou decimal */
@@ -171,19 +147,11 @@ void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int 
 			campo[4] = aux[2];
 			campo[3] = aux[1];
 			campo[2] = aux[0];
-		break;
-		case DESCONHECIDO:
-			//DEBUG
-			//
-		//
-		//
-		// o tipo instrucao da viajaaaado
-		//
-		//
-		//
-		        //
-		  //
 
+		/* Se for um desconhecido (possivelmente um rótulo), copia o texto pro campo */
+		case DESCONHECIDO:
+			strcpy(campo+2, pItem->campo);
+			return;
 		break;
 	}
 }

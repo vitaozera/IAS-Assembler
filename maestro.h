@@ -1,5 +1,8 @@
 #define BUFFERSIZE 1500
-#define TAM_PALAVRA 11
+#ifndef TAM_PALAVRA
+#define TAM_PALAVRA 64
+#endif
+
 
 struct rotulo {
 	char nome[64];

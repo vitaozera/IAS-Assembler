@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "diretivas.h"
 
-#define TAM_PALAVRA 11
+#define TAM_PALAVRA 64
 
 struct item {
 	char campo[64];
@@ -188,14 +188,21 @@ void executarWord(struct item *pItem, struct rotulo *listaRotulos,
 	}
 	/* Numero de entrada em rótulo */
 	else if(pItem->tipo == ROTULO) {
-		formatarRotulo(pItem->campo);
-		
+		formatarRotulo(pItem->campo);		
 		pos = buscarValorRotulo(listaRotulos, pItem->campo);
-		snprintf(p->prox->campo1, TAM_PALAVRA, "%010X", pos);
+		/* Se o rótulo ainda não é conhecido nesse ponto do programa, deixa ele escrito */
+		if(pos == -1){
+			snprintf(p->prox->campo1, TAM_PALAVRA, "%s", pItem->campo);
+		}
+		/* Se o rótulo ja for conhecido, anota sua posição */
+		else {
+			snprintf(p->prox->campo1, TAM_PALAVRA, "%010X", pos);
+		}
 	}
+	
 	p->prox->campo2[0] = '\0';
 	p->prox->pos = *pontoDeMontagem;
-	p->prox->tipo = NUMERO_HEXA;
+	p->prox->tipo = NUMERO_HEXA;    //DEBUG - pode dar bugs no caso de rotulo ?
 	p->prox->prox = NULL;
 
 	*ladoAtual = ESQUERDA;

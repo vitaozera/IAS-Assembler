@@ -1,4 +1,4 @@
-#define TAM_PALAVRA 11
+#define TAM_PALAVRA 64
 
 struct palavra {
 	char campo1[TAM_PALAVRA], campo2[TAM_PALAVRA];

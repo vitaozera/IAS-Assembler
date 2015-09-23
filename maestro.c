@@ -117,6 +117,9 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 		pItem = pItem->prox;
 	}
 
+	/* Substitui os rótulos faltantes */
+	rotulosFaltantes(&listaRotulos, listaPalavras);
+
 	printf("__________________________________________________________________\n");
 	/* Imprime a lista de itens */
 	printf("LISTA DE ITENS:\n");
@@ -201,7 +204,6 @@ void delItemLista(struct item *listaItens, struct item *morto) {
 
 /* Identifica qual o tipo (instrucao, rotulo, diretiva... */
 int identificarTipo(char campo[], int tam) {
-	int i;
 	
 	/* Verifica se o campo é rotulo (Se o último caractere for : )*/
 	if( campo[tam-1] == ':' ) {

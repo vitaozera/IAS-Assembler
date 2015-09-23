@@ -75,7 +75,7 @@ void imprimirMapa(struct palavra *listaPalavras, char *argv[], int argc) {
 		file = fopen(argv[2], "w");
 	}
 
-	for(i = 0; i < 1024; i++) {
+	for(i = 0; i < MAX_PALAVRAS; i++) {
 		p = listaPalavras->prox;
 		while(p != NULL) {
 			/* Se houver um arquivo de saida */
