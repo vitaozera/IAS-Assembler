@@ -1,10 +1,12 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "rotulos.h"
 
 struct rotulo {
 	char nome[64];
 	int pos; // posicao assiciada
+	int lado;
 	struct rotulo *prox;
 };
 
@@ -25,7 +27,7 @@ void formatarRotulo(char token[]) {
 	}
 }
 
-void addListaRotulo(struct rotulo *listaRotulos, struct item *pItem, int pontoDeMontagem) {
+void addListaRotulo(struct rotulo *listaRotulos, struct item *pItem, int pontoDeMontagem, int ladoAtual) {
 	struct rotulo *p;
 
 	formatarRotulo(pItem->campo);
@@ -40,6 +42,7 @@ void addListaRotulo(struct rotulo *listaRotulos, struct item *pItem, int pontoDe
 	p->prox = malloc(sizeof(struct rotulo));
 	strcpy(p->prox->nome, pItem->campo);
 	p->prox->pos = pontoDeMontagem;
+	p->prox->lado = ladoAtual;
 	p->prox->prox = NULL;
 }
 

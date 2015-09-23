@@ -21,7 +21,8 @@ struct diretivaSet {
 
 struct rotulo {
 	char nome[64];
-	int pos;  // posicao assiciada
+	int pos; // posicao assiciada
+	int lado;
 	struct rotulo *prox;
 };
 
@@ -158,7 +159,7 @@ void executarAlign(int *pontoDeMontagem, int i) {
 }
 
 void executarWord(struct item *pItem, struct rotulo *listaRotulos,
- int *pontoDeMontagem, struct palavra *listaPalavras) {
+ int *pontoDeMontagem, struct palavra *listaPalavras, int *ladoAtual) {
 	int pos; //posicão do rótulo, caso haja
 	struct palavra *p;
 
@@ -190,18 +191,19 @@ void executarWord(struct item *pItem, struct rotulo *listaRotulos,
 	p->prox->tipo = NUMERO_HEXA;
 	p->prox->prox = NULL;
 
+	*ladoAtual = ESQUERDA;
 	*pontoDeMontagem = *pontoDeMontagem + 1;
 }
 
 void executarWFill(struct item *pItem, struct rotulo *listaRotulos,
- int *pontoDeMontagem, struct palavra *listaPalavras) {
+ int *pontoDeMontagem, struct palavra *listaPalavras, int *ladoAtual) {
 	int i, j;
 
 	i = atoi(pItem->campo);
 
 	/* manda rodar i vezes a diretiva .word */
 	for(j = 0; j < i; j++) {
-		executarWord(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras);
+		executarWord(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras, ladoAtual);
 	}
 }
 
@@ -218,7 +220,7 @@ void executarOrg(char *valor_hex,char *valor, int *pontoDeMontagem) {
 
 /* Executa todos tipo de diretiva, exceto a .set que é executada por diretivaSet() */
 void executarDiretiva(struct item *pItem, struct item *listaItens, struct rotulo *listaRotulos,
- int *pontoDeMontagem, struct palavra *listaPalavras) {
+ int *pontoDeMontagem, struct palavra *listaPalavras, int *ladoAtual) {
 	int tipoDiretiva, multiplo;
 	char valor_hex[64];
 
@@ -237,11 +239,11 @@ void executarDiretiva(struct item *pItem, struct item *listaItens, struct rotulo
 			delItemLista(listaItens, pItem->prox); //deleta o proximo item da lista. (ele contem o valor do .align)
 		break;
 		case WORD:
-			executarWord(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras);
+			executarWord(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras, ladoAtual);
 			delItemLista(listaItens, pItem->prox); //deleta o proximo item da lista. (ele contem o valor do .word)
 		break;
 		case WFILL:
-			executarWFill(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras);
+			executarWFill(pItem->prox, listaRotulos, pontoDeMontagem, listaPalavras, ladoAtual);
 			delItemLista(listaItens, pItem->prox->prox); //deleta o proximo item da lista. (contem arg 2 do wfill)
 			delItemLista(listaItens, pItem->prox); //deleta o proximo item da lista. (contem o arg 1 do wfill
 		break;

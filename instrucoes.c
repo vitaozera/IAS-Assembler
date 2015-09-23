@@ -181,7 +181,7 @@ void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int 
 }
 
 void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotulo *listaRotulos,
-	int *pontoDeMontagem, struct palavra *listaPalavras) {
+	int *pontoDeMontagem, struct palavra *listaPalavras, int *ladoAtual) {
 	int tipoInstrucao, ladoInstrucao, i;
 	struct palavra *p;
 	char *campo;
@@ -207,11 +207,13 @@ void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotul
 			strcpy(p->prox->campo2, "00000");
 			/* Ponteiro para o campo da palavra onde será escrita a instrucao */
 			campo = p->prox->campo1;
+			*ladoAtual = DIREITA;
 			*pontoDeMontagem = *pontoDeMontagem + 1;
 		break;
 		case DIREITA:
 			/* Ponteiro para o campo da palavra onde será escrita a instrucao */
 			campo = p->campo2;
+			*ladoAtual = ESQUERDA;
 		break;
 	}
 

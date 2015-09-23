@@ -25,6 +25,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 	int tam, tamAux;
 	int tipoCampo;
 	int pontoDeMontagem = 0x000;
+	int ladoAtual = ESQUERDA;
 	char buffer[BUFFERSIZE];
 	char temp[BUFFERSIZE], aux;
 	char *token, *tokenAux;
@@ -95,13 +96,13 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 	while(pItem != NULL) {
 		switch(pItem->tipo) {
 			case ROTULO:
-				addListaRotulo(&listaRotulos, pItem, pontoDeMontagem);
+				addListaRotulo(&listaRotulos, pItem, pontoDeMontagem, ladoAtual);
 			break;
 			case DIRETIVA:
-				executarDiretiva(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, listaPalavras);
+				executarDiretiva(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, listaPalavras, &ladoAtual);
 			break;
 			case INSTRUCAO:
-				executarInstrucao(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, listaPalavras);
+				executarInstrucao(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, listaPalavras, &ladoAtual);
 			break;
 			case DECIMAL:
 				//DEBUG provavelmente nao é necessario tratar. Ou talvez seja bom pra dizer q deu erro
@@ -131,7 +132,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 	struct rotulo *r;
 	r = listaRotulos.prox;
 	while(r != NULL) {
-		printf("rotulo: %s | mem: %X\n", r->nome, r->pos);
+		printf("rotulo: %s | mem: %X | lado: %d\n", r->nome, r->pos, r->lado);
 		r = r->prox;
 	}
 	printf("\n");
@@ -150,7 +151,6 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 
 	/* Libera a memória da lista de rótulos. A partir da cabeça */
 	freeListaRotulos(listaRotulos.prox);
-
 }
 
 /* Adiciona um item à lista ligada de itens */

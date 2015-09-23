@@ -1,6 +1,3 @@
-#include <string.h>
-#include <stdbool.h>
-
 #define TAM_PALAVRA 11
 
 struct palavra {
@@ -12,7 +9,8 @@ struct palavra {
 
 struct rotulo {
 	char nome[64];
-	int pos; // posicao assiciada. Em hexadecimal
+	int pos; // posicao assiciada
+	int lado;
 	struct rotulo *prox;
 };
 
@@ -27,7 +25,7 @@ enum tipoItem{ ROTULO=1, DIRETIVA=2, INSTRUCAO=3, DECIMAL=4, HEXADECIMAL=5, ENTR
 
 enum tipoPalavra{ NUMERO_HEXA=1, INSTRUCOES=2};
 
-enum ladoInstrucao{ESQUERDA=1, DIREITA=2};
+enum lado{ESQUERDA=1, DIREITA=2};
 
 enum tipoInstrucao {
 	LD=1,

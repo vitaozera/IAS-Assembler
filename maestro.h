@@ -3,7 +3,8 @@
 
 struct rotulo {
 	char nome[64];
-	int pos; // posicao assiciada. Em hexadecimal
+	int pos; // posicao assiciada
+	int lado;
 	struct rotulo *prox;
 };
 
