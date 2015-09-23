@@ -41,7 +41,7 @@ enum tipoInstrucao {
 	SUB=11,
 	SUBmod=12,
 	MUL=13,
-	DIF=14,
+	DIV=14,
 	LSH=15,
 	RSH=16,
 	STaddr=17

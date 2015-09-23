@@ -32,8 +32,8 @@ int indentificarInstrucao(char campo[]) {
 		return SUBmod;
 	if( strcmp(campo, "MUL") == 0)
 		return MUL;
-	if( strcmp(campo, "DIF") == 0)
-		return DIF;
+	if( strcmp(campo, "DIV") == 0)
+		return DIV;
 	if( strcmp(campo, "LSH") == 0)
 		return LSH;
 	if( strcmp(campo, "RSH") == 0)
@@ -117,7 +117,7 @@ void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int 
 		campo[0] = '0';
 		campo[1] = 'B';
 	}
-	else if(tipoInstrucao == DIF) {
+	else if(tipoInstrucao == DIV) {
 		campo[0] = '0';
 		campo[1] = 'C';
 	}
@@ -161,23 +161,31 @@ void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int 
 		break;
 		case DECIMAL:
 			snprintf(aux, 4, "%03X", atoi(pItem->campo));
-			printf("AUXXXX: %s", aux);
 			campo[4] = aux[2];
 			campo[3] = aux[1];
 			campo[2] = aux[0];
 		break;
 		case ROTULO:
 			pos = buscarValorRotulo(listaRotulos, pItem->campo);
-			printf("POOOOOOOOOOOOOS: %d\n\n", pos);
 			snprintf(aux, 4, "%03X", pos);
 			campo[4] = aux[2];
 			campo[3] = aux[1];
 			campo[2] = aux[0];
 		break;
+		case DESCONHECIDO:
+			//DEBUG
+			//
+		//
+		//
+		// o tipo instrucao da viajaaaado
+		//
+		//
+		//
+		        //
+		  //
+
+		break;
 	}
-
-
-
 }
 
 void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotulo *listaRotulos,
@@ -208,12 +216,13 @@ void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotul
 			/* Ponteiro para o campo da palavra onde será escrita a instrucao */
 			campo = p->prox->campo1;
 			*ladoAtual = DIREITA;
-			*pontoDeMontagem = *pontoDeMontagem + 1;
+			
 		break;
 		case DIREITA:
 			/* Ponteiro para o campo da palavra onde será escrita a instrucao */
 			campo = p->campo2;
 			*ladoAtual = ESQUERDA;
+			*pontoDeMontagem = *pontoDeMontagem + 1;
 		break;
 	}
 

@@ -117,6 +117,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 		pItem = pItem->prox;
 	}
 
+	printf("__________________________________________________________________\n");
 	/* Imprime a lista de itens */
 	printf("LISTA DE ITENS:\n");
 	struct item *p;
@@ -126,6 +127,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 		p = p->prox;
 	}
 	printf("\n");
+	printf("__________________________________________________________________\n");
 
 	/* Imprime a lista de rotulos */
 	printf("LISTA DE RÓTULOS:\n");
@@ -136,6 +138,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 		r = r->prox;
 	}
 	printf("\n");
+	printf("__________________________________________________________________\n");
 
 	/* Imprime a lista de palavras */
 	printf("LISTA DE PALAVRAS:\n");
@@ -145,6 +148,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 		printf("campo1: %s | campo2: %s | tipo: %d   |  mem: %03X\n", s->campo1, s->campo2, s->tipo, s->pos);
 		s = s->prox;
 	}
+	printf("__________________________________________________________________\n");
 
 	/* Libera a memória da lista de itens. A partir da cabeça */
 	freeListaItens(listaItens.prox);

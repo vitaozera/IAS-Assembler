@@ -68,11 +68,17 @@ void executarSet(struct item *listaItens, struct diretivaSet *listaSet) {
 		while(pItem != NULL) {
 			if(strcmp(pSet->campo, pItem->campo) == 0) {
 				/* Troca o valor */
-				if(ehHexadecimal(pSet->valor, strlen(pSet->valor)))
-					strcpy(pItem->campo, pSet->valor+2);             //o número +2 ignora o "0x" do começo
+				if(ehHexadecimal(pSet->valor, strlen(pSet->valor))){
+					printf("OI: %s\n", pSet->campo);
+					strcpy(pItem->campo, pSet->valor);           //o número +2 ignora o "0x" do começo
+					pItem->tipo = HEXADECIMAL;
+					printf("OI2: %s\n", pItem->campo);
+				}
 				else if(ehDecimal(pSet->valor, strlen(pSet->valor))){
 					decimal2Hex(numero_hex, pSet->valor);
-					strcpy(pItem->campo, numero_hex);  
+					strcpy(pItem->campo, numero_hex);
+					printf("CAMPO: %s\n", pItem->campo);
+					pItem->tipo = HEXADECIMAL;
 				}
 			}
 			pItem = pItem->prox;
@@ -146,16 +152,17 @@ int identificarDiretiva(struct item *p) {
 void executarAlign(int *pontoDeMontagem, int i) {
 	int k;
 
+	/* Se o ponto de montagem ja for um múltiplo.
+	 (ignora pro caso onde o ponto de montagem é 0)*/
+	if(*pontoDeMontagem % i == 0 && *pontoDeMontagem != 0)
+		return;
+
 	/* Último múltiplo antes do numero do ponto de montagem */
 	k = *pontoDeMontagem / i;
 	k = k * i;
 
-	printf("PONTO: %x\n", *pontoDeMontagem);
-
 	/* Salva o próximo múltiplo no ponto de montagem */
 	*pontoDeMontagem = k + i;
-
-	printf("PONTO: %x\n", *pontoDeMontagem);
 }
 
 void executarWord(struct item *pItem, struct rotulo *listaRotulos,

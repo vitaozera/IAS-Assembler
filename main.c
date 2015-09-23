@@ -10,7 +10,7 @@
 #include "maestro.h"
 #include "main.h"
 
-void imprimirMapa(struct palavra *listaPalavras, char *argv[]);
+void imprimirMapa(struct palavra *listaPalavras, char *argv[], int argc);
 void freeListaPalavras(struct palavra *p);
 
 int main(int argc, char *argv[] ) {
@@ -50,7 +50,7 @@ int main(int argc, char *argv[] ) {
 		exit(-1);
 	}
 
-	imprimirMapa(&listaPalavras, argv);
+	imprimirMapa(&listaPalavras, argv, argc);
 
 	/* Libera a memória da lista de palavras. A partir da cabeça */
 	freeListaPalavras(listaPalavras.prox);
@@ -65,38 +65,57 @@ void freeListaPalavras(struct palavra *p) {
 	free(p);
 }
 
-void imprimirMapa(struct palavra *listaPalavras, char *argv[]) {
+void imprimirMapa(struct palavra *listaPalavras, char *argv[], int argc) {
 	struct palavra *p;
 	FILE *file;
+	int i;
 
 	/* Se houver um arquivo de saida */
-	if(argv[2] != NULL) {
+	if(argc > 2) {
 		file = fopen(argv[2], "w");
 	}
 
-	p = listaPalavras->prox;
+	for(i = 0; i < 1024; i++) {
+		p = listaPalavras->prox;
 		while(p != NULL) {
 			/* Se houver um arquivo de saida */
-			if(argv[2] != NULL) {
+			if(argc > 2) {
 				/* Se forem instrucoes */
-				if( p->tipo == INSTRUCOES) {
-				fprintf(file, "%03X %c%c %c%c %c%c %c%c %c%c\n",
+				if( p->tipo == INSTRUCOES && p->pos == i) {
+				fprintf(file, "%03X %c%c %c%c%c %c%c %c%c%c\n",
 					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
 					 p->campo2[0], p->campo2[1], p->campo2[2], p->campo2[3], p->campo2[4]);
 				}
 				/* Se for um numero em hexa */
-				else if(p->tipo == NUMERO_HEXA) {
-					fprintf(file, "%03X %c%c %c%c %c%c %c%c %c%c\n",
+				else if(p->tipo == NUMERO_HEXA && p->pos == i) {
+					fprintf(file, "%03X %c%c %c%c%c %c%c %c%c%c\n",
 					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
 					 p->campo1[5], p->campo1[6], p->campo1[7], p->campo1[8], p->campo1[9]);
 				}
 			}
 			/* Se NÃO houver um arquivo de saida */
 			else {
-				printf("%03X %c%c %c%c %c%c %c%c %c%c\n",
-					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
-					 p->campo2[0], p->campo2[1], p->campo2[2], p->campo2[3], p->campo2[4]);
+				/* Se forem instrucoes */
+				if( p->tipo == INSTRUCOES && p->pos == i) {
+					printf("%03X %c%c %c%c%c %c%c %c%c%c\n",
+					  p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					  p->campo2[0], p->campo2[1], p->campo2[2], p->campo2[3], p->campo2[4]);
+				}
+				/* Se for um numero em hexa */
+				else if(p->tipo == NUMERO_HEXA && p->pos == i) {
+					printf("%03X %c%c %c%c%c %c%c %c%c%c\n",
+					  p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					  p->campo1[5], p->campo1[6], p->campo1[7], p->campo1[8], p->campo1[9]);
+				}
 			}
 			p = p->prox;
 		}
+	}
+
+	
+
+	/* Fecha o arquivo */
+	if(argc > 2) {
+		fclose(file);
+	}	
 }

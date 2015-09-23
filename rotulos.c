@@ -59,7 +59,6 @@ int buscarValorRotulo(struct rotulo *listaRotulos, char *nome) {
 	p = listaRotulos;
 
 	while(p != NULL) {
-		printf("#%s %s#\n", p->nome, p->nome);
 		if( strcmp(p->nome, nome) == 0 )
 			return p->pos;
 		p = p->prox;

@@ -42,5 +42,5 @@ bool ehHexadecimal(char campo[], int tam) {
 
 /* Converte um número decimal para hexadecimal */
 void decimal2Hex(char *hex, char *dec) {
-	snprintf(hex, 64, "%X", atoi(dec));
+	snprintf(hex, 64, "%012X", atoi(dec));
 }
