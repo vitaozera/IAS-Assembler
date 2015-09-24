@@ -79,16 +79,19 @@ void imprimirMapa(struct palavra *listaPalavras, char *argv[], int argc) {
 			if(argc > 2) {
 				/* Se forem instrucoes */
 				if( p->tipo == INSTRUCOES && p->pos == i) {
-				fprintf(file, "%03X %c%c %c%c%c %c%c %c%c%c\n",
+				fprintf(file, "%03X %c%c %c%c%c %c%c %c%c%c",
 					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
 					 p->campo2[0], p->campo2[1], p->campo2[2], p->campo2[3], p->campo2[4]);
 				}
 				/* Se for um numero em hexa */
 				else if(p->tipo == NUMERO_HEXA && p->pos == i) {
-					fprintf(file, "%03X %c%c %c%c%c %c%c %c%c%c\n",
+					fprintf(file, "%03X %c%c %c%c%c %c%c %c%c%c",
 					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
 					 p->campo1[5], p->campo1[6], p->campo1[7], p->campo1[8], p->campo1[9]);
 				}
+				/* Garante que não haja um '\n' na ultima linha */
+				if(p->prox != NULL && p->pos == i)
+					fprintf(file, "\n");
 			}
 			/* Se NÃO houver um arquivo de saida */
 			else {
@@ -108,8 +111,6 @@ void imprimirMapa(struct palavra *listaPalavras, char *argv[], int argc) {
 			p = p->prox;
 		}
 	}
-
-	
 
 	/* Fecha o arquivo */
 	if(argc > 2) {

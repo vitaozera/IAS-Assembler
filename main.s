@@ -134,6 +134,8 @@ freeListaPalavras:
 .LC3:
 	.string	"w"
 .LC4:
+	.string	"%03X %c%c %c%c%c %c%c %c%c%c"
+.LC5:
 	.string	"%03X %c%c %c%c%c %c%c %c%c%c\n"
 	.text
 	.globl	imprimirMapa
@@ -168,12 +170,12 @@ imprimirMapa:
 .L13:
 	movl	$0, -52(%rbp)
 	jmp	.L14
-.L22:
+.L23:
 	movq	-72(%rbp), %rax
 	movq	136(%rax), %rax
 	movq	%rax, -48(%rbp)
 	jmp	.L15
-.L21:
+.L22:
 	cmpl	$2, -84(%rbp)
 	jle	.L16
 	movq	-48(%rbp), %rax
@@ -232,16 +234,16 @@ imprimirMapa:
 	movl	$0, %eax
 	call	fprintf
 	addq	$64, %rsp
-	jmp	.L19
+	jmp	.L18
 .L17:
 	movq	-48(%rbp), %rax
 	movl	132(%rax), %eax
 	cmpl	$1, %eax
-	jne	.L19
+	jne	.L18
 	movq	-48(%rbp), %rax
 	movl	128(%rax), %eax
 	cmpl	-52(%rbp), %eax
-	jne	.L19
+	jne	.L18
 	movq	-48(%rbp), %rax
 	movzbl	9(%rax), %eax
 	movsbl	%al, %ebx
@@ -290,16 +292,29 @@ imprimirMapa:
 	movl	$0, %eax
 	call	fprintf
 	addq	$64, %rsp
-	jmp	.L19
-.L16:
+.L18:
 	movq	-48(%rbp), %rax
-	movl	132(%rax), %eax
-	cmpl	$2, %eax
-	jne	.L20
+	movq	136(%rax), %rax
+	testq	%rax, %rax
+	je	.L20
 	movq	-48(%rbp), %rax
 	movl	128(%rax), %eax
 	cmpl	-52(%rbp), %eax
 	jne	.L20
+	movq	-40(%rbp), %rax
+	movq	%rax, %rsi
+	movl	$10, %edi
+	call	fputc
+	jmp	.L20
+.L16:
+	movq	-48(%rbp), %rax
+	movl	132(%rax), %eax
+	cmpl	$2, %eax
+	jne	.L21
+	movq	-48(%rbp), %rax
+	movl	128(%rax), %eax
+	cmpl	-52(%rbp), %eax
+	jne	.L21
 	movq	-48(%rbp), %rax
 	movzbl	68(%rax), %eax
 	movsbl	%al, %r11d
@@ -341,20 +356,20 @@ imprimirMapa:
 	movl	%r12d, %r9d
 	movl	%ebx, %r8d
 	movl	%eax, %esi
-	movl	$.LC4, %edi
+	movl	$.LC5, %edi
 	movl	$0, %eax
 	call	printf
 	addq	$48, %rsp
-	jmp	.L19
-.L20:
+	jmp	.L20
+.L21:
 	movq	-48(%rbp), %rax
 	movl	132(%rax), %eax
 	cmpl	$1, %eax
-	jne	.L19
+	jne	.L20
 	movq	-48(%rbp), %rax
 	movl	128(%rax), %eax
 	cmpl	-52(%rbp), %eax
-	jne	.L19
+	jne	.L20
 	movq	-48(%rbp), %rax
 	movzbl	9(%rax), %eax
 	movsbl	%al, %r11d
@@ -396,21 +411,21 @@ imprimirMapa:
 	movl	%r12d, %r9d
 	movl	%ebx, %r8d
 	movl	%eax, %esi
-	movl	$.LC4, %edi
+	movl	$.LC5, %edi
 	movl	$0, %eax
 	call	printf
 	addq	$48, %rsp
-.L19:
+.L20:
 	movq	-48(%rbp), %rax
 	movq	136(%rax), %rax
 	movq	%rax, -48(%rbp)
 .L15:
 	cmpq	$0, -48(%rbp)
-	jne	.L21
+	jne	.L22
 	addl	$1, -52(%rbp)
 .L14:
 	cmpl	$1023, -52(%rbp)
-	jle	.L22
+	jle	.L23
 	cmpl	$2, -84(%rbp)
 	jle	.L12
 	movq	-40(%rbp), %rax

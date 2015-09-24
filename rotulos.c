@@ -19,6 +19,7 @@ void formatarRotulo(char token[]) {
 
 void addListaRotulo(struct rotulo *listaRotulos, struct item *pItem, int pontoDeMontagem, int ladoAtual) {
 	struct rotulo *p;
+	int tam;
 
 	formatarRotulo(pItem->campo);
 
@@ -28,9 +29,15 @@ void addListaRotulo(struct rotulo *listaRotulos, struct item *pItem, int pontoDe
 		p = p->prox;
 	}
 
+	tam = strlen(pItem->campo);
 	/* Adiciona o rótulo no final da lista */
 	p->prox = malloc(sizeof(struct rotulo));
 	strcpy(p->prox->nome, pItem->campo);
+	/* Verifica se é um rótulo válido */
+	if( pItem->campo[tam-1] == ':') {
+		printf("ERROR on line %d\n%s: is not a valid label\n", pItem->linha, pItem->campo);
+		exit(-1);
+	}
 	p->prox->pos = pontoDeMontagem;
 	p->prox->lado = ladoAtual;
 	p->prox->prox = NULL;

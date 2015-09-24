@@ -202,6 +202,12 @@ void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotul
 
 	tipoInstrucao = indentificarInstrucao(pItem->campo);
 
+	printf("TIPOOOO: oioioi\n\n");
+	if(tipoInstrucao == DESCONHECIDO) {
+		printf("ERROR on line %d\n%s is not a valid mnemonic!\n", pItem->linha, pItem->campo);
+		exit(-1);
+	}
+
 	preencherInstrucao(campo, tipoInstrucao, pItem->prox, ladoInstrucao, listaRotulos);
 }
 

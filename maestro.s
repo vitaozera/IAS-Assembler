@@ -120,7 +120,6 @@ Orquestrador:
 	movq	-1720(%rbp), %rax
 	movl	%edx, %esi
 	movq	%rax, %rdi
-	movl	$0, %eax
 	call	tirarNewLine
 	movl	%eax, -1724(%rbp)
 	movl	-1724(%rbp), %edx
@@ -173,40 +172,27 @@ Orquestrador:
 	jne	.L9
 	leaq	-1600(%rbp), %rax
 	movq	%rax, %rdi
-	movl	$0, %eax
 	call	diretivaSet
 	leaq	-1600(%rbp), %rax
 	movq	%rax, -1712(%rbp)
 	jmp	.L10
-.L19:
+.L15:
 	movq	-1712(%rbp), %rax
 	movl	64(%rax), %eax
-	cmpl	$5, %eax
-	ja	.L27
-	movl	%eax, %eax
-	movq	.L13(,%rax,8), %rax
-	jmp	*%rax
-	.section	.rodata
-	.align 8
-	.align 4
-.L13:
-	.quad	.L27
-	.quad	.L12
-	.quad	.L14
-	.quad	.L15
-	.quad	.L27
-	.quad	.L27
-	.text
-.L12:
+	cmpl	$2, %eax
+	je	.L12
+	cmpl	$3, %eax
+	je	.L13
+	cmpl	$1, %eax
+	jne	.L11
 	movl	-1736(%rbp), %ecx
 	movl	-1740(%rbp), %edx
 	movq	-1712(%rbp), %rsi
 	leaq	-1680(%rbp), %rax
 	movq	%rax, %rdi
-	movl	$0, %eax
 	call	addListaRotulo
-	jmp	.L18
-.L14:
+	jmp	.L11
+.L12:
 	leaq	-1736(%rbp), %r8
 	movq	-1760(%rbp), %rdi
 	leaq	-1740(%rbp), %rcx
@@ -216,10 +202,9 @@ Orquestrador:
 	movq	%r8, %r9
 	movq	%rdi, %r8
 	movq	%rax, %rdi
-	movl	$0, %eax
 	call	executarDiretiva
-	jmp	.L18
-.L15:
+	jmp	.L11
+.L13:
 	leaq	-1736(%rbp), %r8
 	movq	-1760(%rbp), %rdi
 	leaq	-1740(%rbp), %rcx
@@ -231,21 +216,18 @@ Orquestrador:
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	executarInstrucao
-	jmp	.L18
-.L27:
 	nop
-.L18:
+.L11:
 	movq	-1712(%rbp), %rax
 	movq	72(%rax), %rax
 	movq	%rax, -1712(%rbp)
 .L10:
 	cmpq	$0, -1712(%rbp)
-	jne	.L19
+	jne	.L15
 	movq	-1760(%rbp), %rdx
 	leaq	-1680(%rbp), %rax
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
-	movl	$0, %eax
 	call	rotulosFaltantes
 	movl	$.LC5, %edi
 	call	puts
@@ -253,17 +235,17 @@ Orquestrador:
 	call	puts
 	leaq	-1600(%rbp), %rax
 	movq	%rax, -1704(%rbp)
-	jmp	.L20
-.L21:
+	jmp	.L16
+.L17:
 	movq	-1704(%rbp), %rax
 	movq	%rax, %rdi
 	call	puts
 	movq	-1704(%rbp), %rax
 	movq	72(%rax), %rax
 	movq	%rax, -1704(%rbp)
-.L20:
+.L16:
 	cmpq	$0, -1704(%rbp)
-	jne	.L21
+	jne	.L17
 	movl	$10, %edi
 	call	putchar
 	movl	$.LC5, %edi
@@ -272,8 +254,8 @@ Orquestrador:
 	call	puts
 	movq	-1608(%rbp), %rax
 	movq	%rax, -1696(%rbp)
-	jmp	.L22
-.L23:
+	jmp	.L18
+.L19:
 	movq	-1696(%rbp), %rax
 	movl	68(%rax), %ecx
 	movq	-1696(%rbp), %rax
@@ -286,9 +268,9 @@ Orquestrador:
 	movq	-1696(%rbp), %rax
 	movq	72(%rax), %rax
 	movq	%rax, -1696(%rbp)
-.L22:
+.L18:
 	cmpq	$0, -1696(%rbp)
-	jne	.L23
+	jne	.L19
 	movl	$10, %edi
 	call	putchar
 	movl	$.LC5, %edi
@@ -297,8 +279,8 @@ Orquestrador:
 	call	puts
 	movq	-1760(%rbp), %rax
 	movq	%rax, -1688(%rbp)
-	jmp	.L24
-.L25:
+	jmp	.L20
+.L21:
 	movq	-1688(%rbp), %rax
 	movl	128(%rax), %ecx
 	movq	-1688(%rbp), %rax
@@ -316,9 +298,9 @@ Orquestrador:
 	movq	-1688(%rbp), %rax
 	movq	136(%rax), %rax
 	movq	%rax, -1688(%rbp)
-.L24:
+.L20:
 	cmpq	$0, -1688(%rbp)
-	jne	.L25
+	jne	.L21
 	movl	$.LC5, %edi
 	call	puts
 	movq	-1528(%rbp), %rax
@@ -326,13 +308,12 @@ Orquestrador:
 	call	freeListaItens
 	movq	-1608(%rbp), %rax
 	movq	%rax, %rdi
-	movl	$0, %eax
 	call	freeListaRotulos
 	movq	-8(%rbp), %rax
 	xorq	%fs:40, %rax
-	je	.L26
+	je	.L22
 	call	__stack_chk_fail
-.L26:
+.L22:
 	leave
 	.cfi_def_cfa 7, 8
 	ret
@@ -356,16 +337,16 @@ addListaItens:
 	movl	%ecx, -40(%rbp)
 	movq	-24(%rbp), %rax
 	movq	%rax, -8(%rbp)
-	jmp	.L29
-.L30:
+	jmp	.L24
+.L25:
 	movq	-8(%rbp), %rax
 	movq	72(%rax), %rax
 	movq	%rax, -8(%rbp)
-.L29:
+.L24:
 	movq	-8(%rbp), %rax
 	movq	72(%rax), %rax
 	testq	%rax, %rax
-	jne	.L30
+	jne	.L25
 	movl	$80, %edi
 	call	malloc
 	movq	%rax, %rdx
@@ -408,12 +389,12 @@ freeListaItens:
 	subq	$16, %rsp
 	movq	%rdi, -8(%rbp)
 	cmpq	$0, -8(%rbp)
-	je	.L32
+	je	.L27
 	movq	-8(%rbp), %rax
 	movq	72(%rax), %rax
 	movq	%rax, %rdi
 	call	freeListaItens
-.L32:
+.L27:
 	movq	-8(%rbp), %rax
 	movq	%rax, %rdi
 	call	free
@@ -438,12 +419,12 @@ delItemLista:
 	movq	%rsi, -32(%rbp)
 	movq	-24(%rbp), %rax
 	movq	%rax, -16(%rbp)
-	jmp	.L34
-.L37:
+	jmp	.L29
+.L32:
 	movq	-16(%rbp), %rax
 	movq	72(%rax), %rax
 	cmpq	-32(%rbp), %rax
-	jne	.L35
+	jne	.L30
 	movq	-32(%rbp), %rax
 	movq	72(%rax), %rax
 	movq	%rax, -8(%rbp)
@@ -453,15 +434,15 @@ delItemLista:
 	movq	-16(%rbp), %rax
 	movq	-8(%rbp), %rdx
 	movq	%rdx, 72(%rax)
-	jmp	.L33
-.L35:
+	jmp	.L28
+.L30:
 	movq	-16(%rbp), %rax
 	movq	72(%rax), %rax
 	movq	%rax, -16(%rbp)
-.L34:
+.L29:
 	cmpq	$0, -16(%rbp)
-	jne	.L37
-.L33:
+	jne	.L32
+.L28:
 	leave
 	.cfi_def_cfa 7, 8
 	ret
@@ -488,49 +469,50 @@ identificarTipo:
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	cmpb	$58, %al
-	jne	.L39
+	jne	.L34
 	movl	$1, %eax
-	jmp	.L40
-.L39:
+	jmp	.L35
+.L34:
 	movq	-8(%rbp), %rax
 	movzbl	(%rax), %eax
 	cmpb	$46, %al
-	jne	.L41
+	jne	.L36
 	movl	$2, %eax
-	jmp	.L40
-.L41:
+	jmp	.L35
+.L36:
 	movl	-12(%rbp), %edx
 	movq	-8(%rbp), %rax
 	movl	%edx, %esi
 	movq	%rax, %rdi
 	call	ehDecimal
 	testb	%al, %al
-	je	.L42
+	je	.L37
 	movl	$4, %eax
-	jmp	.L40
-.L42:
+	jmp	.L35
+.L37:
 	movl	-12(%rbp), %edx
 	movq	-8(%rbp), %rax
 	movl	%edx, %esi
 	movq	%rax, %rdi
 	call	ehHexadecimal
 	testb	%al, %al
-	je	.L43
+	je	.L38
 	movl	$5, %eax
-	jmp	.L40
-.L43:
+	jmp	.L35
+.L38:
 	movq	-8(%rbp), %rax
 	movq	%rax, %rdi
+	movl	$0, %eax
 	call	ehInstrucao
-	testb	%al, %al
-	je	.L44
+	testl	%eax, %eax
+	je	.L39
 	movl	$3, %eax
-	jmp	.L40
-.L44:
+	jmp	.L35
+.L39:
 	movq	-8(%rbp), %rax
 	movzbl	(%rax), %eax
 	cmpb	$34, %al
-	jne	.L45
+	jne	.L40
 	movl	-12(%rbp), %eax
 	cltq
 	leaq	-1(%rax), %rdx
@@ -538,12 +520,12 @@ identificarTipo:
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	cmpb	$34, %al
-	jne	.L45
+	jne	.L40
 	movl	$6, %eax
-	jmp	.L40
-.L45:
-	movl	$-1, %eax
+	jmp	.L35
 .L40:
+	movl	$-1, %eax
+.L35:
 	leave
 	.cfi_def_cfa 7, 8
 	ret
@@ -569,7 +551,7 @@ tirarNewLine:
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	cmpb	$10, %al
-	jne	.L47
+	jne	.L42
 	movl	-12(%rbp), %eax
 	cltq
 	leaq	-1(%rax), %rdx
@@ -577,7 +559,7 @@ tirarNewLine:
 	addq	%rdx, %rax
 	movb	$0, (%rax)
 	subl	$1, -12(%rbp)
-.L47:
+.L42:
 	movl	-12(%rbp), %eax
 	popq	%rbp
 	.cfi_def_cfa 7, 8
