@@ -86,14 +86,6 @@ freeListaSet:
 	.cfi_endproc
 .LFE3:
 	.size	freeListaSet, .-freeListaSet
-	.section	.rodata
-.LC0:
-	.string	"OI: %s\n"
-.LC1:
-	.string	"OI2: %s\n"
-.LC2:
-	.string	"CAMPO: %s\n"
-	.text
 	.globl	executarSet
 	.type	executarSet, @function
 executarSet:
@@ -139,11 +131,6 @@ executarSet:
 	testl	%eax, %eax
 	je	.L10
 	movq	-88(%rbp), %rax
-	movq	%rax, %rsi
-	movl	$.LC0, %edi
-	movl	$0, %eax
-	call	printf
-	movq	-88(%rbp), %rax
 	leaq	64(%rax), %rdx
 	movq	-96(%rbp), %rax
 	movq	%rdx, %rsi
@@ -151,11 +138,6 @@ executarSet:
 	call	strcpy
 	movq	-96(%rbp), %rax
 	movl	$5, 64(%rax)
-	movq	-96(%rbp), %rax
-	movq	%rax, %rsi
-	movl	$.LC1, %edi
-	movl	$0, %eax
-	call	printf
 	jmp	.L9
 .L10:
 	movq	-88(%rbp), %rax
@@ -184,11 +166,6 @@ executarSet:
 	movq	%rax, %rdi
 	call	strcpy
 	movq	-96(%rbp), %rax
-	movq	%rax, %rsi
-	movl	$.LC2, %edi
-	movl	$0, %eax
-	call	printf
-	movq	-96(%rbp), %rax
 	movl	$5, 64(%rax)
 .L9:
 	movq	-96(%rbp), %rax
@@ -215,7 +192,7 @@ executarSet:
 .LFE4:
 	.size	executarSet, .-executarSet
 	.section	.rodata
-.LC3:
+.LC0:
 	.string	".set"
 	.text
 	.globl	diretivaSet
@@ -249,7 +226,7 @@ diretivaSet:
 	jmp	.L15
 .L17:
 	movq	-312(%rbp), %rax
-	movl	$.LC3, %esi
+	movl	$.LC0, %esi
 	movq	%rax, %rdi
 	call	strcmp
 	testl	%eax, %eax
@@ -327,13 +304,13 @@ diretivaSet:
 .LFE5:
 	.size	diretivaSet, .-diretivaSet
 	.section	.rodata
-.LC4:
+.LC1:
 	.string	".org"
-.LC5:
+.LC2:
 	.string	".align"
-.LC6:
+.LC3:
 	.string	".word"
-.LC7:
+.LC4:
 	.string	".wfill"
 	.text
 	.globl	identificarDiretiva
@@ -351,7 +328,7 @@ identificarDiretiva:
 	movq	-24(%rbp), %rax
 	movq	%rax, -8(%rbp)
 	movq	-8(%rbp), %rax
-	movl	$.LC4, %esi
+	movl	$.LC1, %esi
 	movq	%rax, %rdi
 	call	strcmp
 	testl	%eax, %eax
@@ -360,7 +337,7 @@ identificarDiretiva:
 	jmp	.L21
 .L20:
 	movq	-8(%rbp), %rax
-	movl	$.LC5, %esi
+	movl	$.LC2, %esi
 	movq	%rax, %rdi
 	call	strcmp
 	testl	%eax, %eax
@@ -369,7 +346,7 @@ identificarDiretiva:
 	jmp	.L21
 .L22:
 	movq	-8(%rbp), %rax
-	movl	$.LC6, %esi
+	movl	$.LC3, %esi
 	movq	%rax, %rdi
 	call	strcmp
 	testl	%eax, %eax
@@ -378,7 +355,7 @@ identificarDiretiva:
 	jmp	.L21
 .L23:
 	movq	-8(%rbp), %rax
-	movl	$.LC7, %esi
+	movl	$.LC4, %esi
 	movq	%rax, %rdi
 	call	strcmp
 	testl	%eax, %eax
@@ -440,9 +417,9 @@ executarAlign:
 .LFE7:
 	.size	executarAlign, .-executarAlign
 	.section	.rodata
-.LC8:
+.LC5:
 	.string	"%010X"
-.LC9:
+.LC6:
 	.string	"%s"
 	.text
 	.globl	executarWord
@@ -489,7 +466,7 @@ executarWord:
 	movq	-8(%rbp), %rax
 	movq	136(%rax), %rax
 	movl	%edx, %ecx
-	movl	$.LC8, %edx
+	movl	$.LC5, %edx
 	movl	$64, %esi
 	movq	%rax, %rdi
 	movl	$0, %eax
@@ -531,7 +508,7 @@ executarWord:
 	movq	136(%rdx), %rdx
 	movq	%rdx, %rdi
 	movq	%rax, %rcx
-	movl	$.LC9, %edx
+	movl	$.LC6, %edx
 	movl	$64, %esi
 	movl	$0, %eax
 	call	snprintf
@@ -542,7 +519,7 @@ executarWord:
 	movq	%rax, %rdi
 	movl	-12(%rbp), %eax
 	movl	%eax, %ecx
-	movl	$.LC8, %edx
+	movl	$.LC5, %edx
 	movl	$64, %esi
 	movl	$0, %eax
 	call	snprintf

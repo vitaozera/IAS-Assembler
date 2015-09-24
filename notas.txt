@@ -1,4 +1,3 @@
-
 /* Possiveis Bugs */
 o enunciado diz que todo caractere à direita de um # é considerado comentario. Mas o programa só percebe o caractere # quando ele está envolto por espaços. Se estiver justaposto a uma palavra o programa nao consegue perceber.
 - Mesmo motivo do bug do # acima. O programa só ignora o tab \t  quando não há varios tab seguidos. Quando há mais de 1 seguido os tabs vao pra lista ligada de itens */
@@ -11,7 +10,7 @@ o enunciado diz que todo caractere à direita de um # é considerado comentario.
 /* Lembretes */
 - não esquecer de fechar arquivos
 - liberar memória
-- ficar antento pra ver se de fato o arquivo de entrada coube no vetor buffer
+- ficar atento pra ver se de fato o arquivo de entrada coube no vetor buffer
 - parametros do zanoni
 - passar valgrind
 - fechar programa com exit(-1)

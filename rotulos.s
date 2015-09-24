@@ -191,10 +191,6 @@ buscarValorRotulo:
 	.cfi_endproc
 .LFE5:
 	.size	buscarValorRotulo, .-buscarValorRotulo
-	.section	.rodata
-.LC1:
-	.string	"pNome: %s | nome: %s\n"
-	.text
 	.globl	buscarLadoRotulo
 	.type	buscarLadoRotulo, @function
 buscarLadoRotulo:
@@ -212,12 +208,6 @@ buscarLadoRotulo:
 	movq	%rax, -8(%rbp)
 	jmp	.L15
 .L18:
-	movq	-8(%rbp), %rax
-	movq	-32(%rbp), %rdx
-	movq	%rax, %rsi
-	movl	$.LC1, %edi
-	movl	$0, %eax
-	call	printf
 	movq	-8(%rbp), %rax
 	movq	-32(%rbp), %rdx
 	movq	%rdx, %rsi
@@ -244,18 +234,9 @@ buscarLadoRotulo:
 .LFE6:
 	.size	buscarLadoRotulo, .-buscarLadoRotulo
 	.section	.rodata
-.LC2:
-	.string	"%d campo: %s  |  pos: %d\n"
-.LC3:
+.LC1:
 	.string	"%010X"
-.LC4:
-	.string	"LADO_BANANA: %d\n"
-	.align 8
-.LC5:
-	.string	"ENTREIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
-.LC6:
-	.string	"CAMPO: %s\n"
-.LC7:
+.LC2:
 	.string	"%03X"
 	.text
 	.globl	rotulosFaltantes
@@ -286,21 +267,12 @@ rotulosFaltantes:
 	movq	%rax, %rdi
 	call	buscarValorRotulo
 	movl	%eax, -20(%rbp)
-	movq	-16(%rbp), %rdx
-	movl	-24(%rbp), %eax
-	leal	1(%rax), %ecx
-	movl	%ecx, -24(%rbp)
-	movl	-20(%rbp), %ecx
-	movl	%eax, %esi
-	movl	$.LC2, %edi
-	movl	$0, %eax
-	call	printf
 	cmpl	$-1, -20(%rbp)
 	je	.L21
 	movq	-16(%rbp), %rax
 	movl	-20(%rbp), %edx
 	movl	%edx, %ecx
-	movl	$.LC3, %edx
+	movl	$.LC1, %edx
 	movl	$64, %esi
 	movq	%rax, %rdi
 	movl	$0, %eax
@@ -312,19 +284,6 @@ rotulosFaltantes:
 	jne	.L22
 	movq	-16(%rbp), %rax
 	movq	%rax, -8(%rbp)
-	movq	-8(%rbp), %rax
-	leaq	2(%rax), %rdx
-	movq	-40(%rbp), %rax
-	movq	%rdx, %rsi
-	movq	%rax, %rdi
-	call	buscarLadoRotulo
-	cmpl	$2, %eax
-	sete	%al
-	movzbl	%al, %eax
-	movl	%eax, %esi
-	movl	$.LC4, %edi
-	movl	$0, %eax
-	call	printf
 	movq	-8(%rbp), %rax
 	movzbl	(%rax), %eax
 	cmpb	$48, %al
@@ -415,8 +374,6 @@ rotulosFaltantes:
 	movq	-8(%rbp), %rax
 	addq	$1, %rax
 	movb	$69, (%rax)
-	movl	$.LC5, %edi
-	call	puts
 	jmp	.L27
 .L26:
 	movq	-8(%rbp), %rax
@@ -465,33 +422,19 @@ rotulosFaltantes:
 	movb	$51, (%rax)
 .L27:
 	movq	-16(%rbp), %rax
-	movq	%rax, %rsi
-	movl	$.LC6, %edi
-	movl	$0, %eax
-	call	printf
-	movq	-16(%rbp), %rax
 	leaq	2(%rax), %rdx
 	movq	-40(%rbp), %rax
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
 	call	buscarValorRotulo
 	movl	%eax, -20(%rbp)
-	movq	-16(%rbp), %rdx
-	movl	-24(%rbp), %eax
-	leal	1(%rax), %ecx
-	movl	%ecx, -24(%rbp)
-	movl	-20(%rbp), %ecx
-	movl	%eax, %esi
-	movl	$.LC2, %edi
-	movl	$0, %eax
-	call	printf
 	cmpl	$-1, -20(%rbp)
 	je	.L29
 	movq	-16(%rbp), %rax
 	leaq	2(%rax), %rdi
 	movl	-20(%rbp), %eax
 	movl	%eax, %ecx
-	movl	$.LC7, %edx
+	movl	$.LC2, %edx
 	movl	$64, %esi
 	movl	$0, %eax
 	call	snprintf
@@ -509,7 +452,7 @@ rotulosFaltantes:
 	leaq	66(%rax), %rdi
 	movl	-20(%rbp), %eax
 	movl	%eax, %ecx
-	movl	$.LC7, %edx
+	movl	$.LC2, %edx
 	movl	$64, %esi
 	movl	$0, %eax
 	call	snprintf

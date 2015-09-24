@@ -1,1 +1,2 @@
-doubleADD "3"
+.set TEMP 23
+.word TEMP

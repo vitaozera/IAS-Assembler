@@ -531,13 +531,6 @@ preencherInstrucao:
 	.cfi_endproc
 .LFE4:
 	.size	preencherInstrucao, .-preencherInstrucao
-	.section	.rodata
-.LC18:
-	.string	"TIPOOOO: oioioi\n"
-	.align 8
-.LC19:
-	.string	"ERROR on line %d\n%s is not a valid mnemonic!\n"
-	.text
 	.globl	executarInstrucao
 	.type	executarInstrucao, @function
 executarInstrucao:
@@ -626,20 +619,6 @@ executarInstrucao:
 	movq	%rax, %rdi
 	call	indentificarInstrucao
 	movl	%eax, -20(%rbp)
-	movl	$.LC18, %edi
-	call	puts
-	cmpl	$7, -20(%rbp)
-	jne	.L56
-	movq	-40(%rbp), %rdx
-	movq	-40(%rbp), %rax
-	movl	68(%rax), %eax
-	movl	%eax, %esi
-	movl	$.LC19, %edi
-	movl	$0, %eax
-	call	printf
-	movl	$-1, %edi
-	call	exit
-.L56:
 	movq	-40(%rbp), %rax
 	movq	72(%rax), %rdx
 	movq	-56(%rbp), %rdi
@@ -670,39 +649,39 @@ ehStringZero:
 	.cfi_offset 3, -24
 	movq	%rdi, -40(%rbp)
 	movl	$0, -20(%rbp)
-	jmp	.L58
-.L62:
+	jmp	.L57
+.L61:
 	movl	-20(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-40(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	testb	%al, %al
-	jne	.L59
+	jne	.L58
 	movl	$1, %eax
-	jmp	.L60
-.L59:
+	jmp	.L59
+.L58:
 	movl	-20(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-40(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	cmpb	$48, %al
-	je	.L61
+	je	.L60
 	movl	$0, %eax
-	jmp	.L60
-.L61:
+	jmp	.L59
+.L60:
 	addl	$1, -20(%rbp)
-.L58:
+.L57:
 	movl	-20(%rbp), %eax
 	movslq	%eax, %rbx
 	movq	-40(%rbp), %rax
 	movq	%rax, %rdi
 	call	strlen
 	cmpq	%rax, %rbx
-	jb	.L62
+	jb	.L61
 	movl	$1, %eax
-.L60:
+.L59:
 	addq	$40, %rsp
 	popq	%rbx
 	popq	%rbp
@@ -728,20 +707,40 @@ escolherLado:
 	call	ehStringZero
 	xorl	$1, %eax
 	testb	%al, %al
-	je	.L64
+	je	.L63
 	movq	-8(%rbp), %rax
 	addq	$64, %rax
 	movq	%rax, %rdi
 	call	ehStringZero
 	testb	%al, %al
-	je	.L64
+	je	.L63
 	movq	-8(%rbp), %rax
 	movl	132(%rax), %eax
 	cmpl	$1, %eax
-	jne	.L64
+	jne	.L63
 	movl	$1, %eax
-	jmp	.L65
-.L64:
+	jmp	.L64
+.L63:
+	movq	-8(%rbp), %rax
+	movq	%rax, %rdi
+	call	ehStringZero
+	xorl	$1, %eax
+	testb	%al, %al
+	je	.L65
+	movq	-8(%rbp), %rax
+	addq	$64, %rax
+	movq	%rax, %rdi
+	call	ehStringZero
+	xorl	$1, %eax
+	testb	%al, %al
+	je	.L65
+	movq	-8(%rbp), %rax
+	movl	132(%rax), %eax
+	cmpl	$2, %eax
+	jne	.L65
+	movl	$1, %eax
+	jmp	.L64
+.L65:
 	movq	-8(%rbp), %rax
 	movq	%rax, %rdi
 	call	ehStringZero
@@ -752,37 +751,17 @@ escolherLado:
 	addq	$64, %rax
 	movq	%rax, %rdi
 	call	ehStringZero
-	xorl	$1, %eax
 	testb	%al, %al
 	je	.L66
 	movq	-8(%rbp), %rax
 	movl	132(%rax), %eax
 	cmpl	$2, %eax
 	jne	.L66
-	movl	$1, %eax
-	jmp	.L65
-.L66:
-	movq	-8(%rbp), %rax
-	movq	%rax, %rdi
-	call	ehStringZero
-	xorl	$1, %eax
-	testb	%al, %al
-	je	.L67
-	movq	-8(%rbp), %rax
-	addq	$64, %rax
-	movq	%rax, %rdi
-	call	ehStringZero
-	testb	%al, %al
-	je	.L67
-	movq	-8(%rbp), %rax
-	movl	132(%rax), %eax
-	cmpl	$2, %eax
-	jne	.L67
 	movl	$2, %eax
-	jmp	.L65
-.L67:
+	jmp	.L64
+.L66:
 	movl	$1, %eax
-.L65:
+.L64:
 	leave
 	.cfi_def_cfa 7, 8
 	ret

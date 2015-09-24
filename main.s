@@ -1,12 +1,13 @@
 	.file	"main.c"
 	.section	.rodata
+	.align 8
 .LC0:
-	.string	"N\303\272mero de argumentos errado"
+	.string	"ERROR\nWrong number of arguments"
 .LC1:
 	.string	"r"
 	.align 8
 .LC2:
-	.string	"Problema na abertura do arquivo"
+	.string	"ERROR\nThere has been a problem opening file %s\n"
 	.text
 	.globl	main
 	.type	main, @function
@@ -89,8 +90,13 @@ main:
 	je	.L8
 	jmp	.L9
 .L5:
+	movq	-208(%rbp), %rax
+	addq	$8, %rax
+	movq	(%rax), %rax
+	movq	%rax, %rsi
 	movl	$.LC2, %edi
-	call	puts
+	movl	$0, %eax
+	call	printf
 	movl	$-1, %edi
 	call	exit
 .L9:
@@ -170,12 +176,12 @@ imprimirMapa:
 .L13:
 	movl	$0, -52(%rbp)
 	jmp	.L14
-.L23:
+.L22:
 	movq	-72(%rbp), %rax
 	movq	136(%rax), %rax
 	movq	%rax, -48(%rbp)
 	jmp	.L15
-.L22:
+.L21:
 	cmpl	$2, -84(%rbp)
 	jle	.L16
 	movq	-48(%rbp), %rax
@@ -234,16 +240,20 @@ imprimirMapa:
 	movl	$0, %eax
 	call	fprintf
 	addq	$64, %rsp
-	jmp	.L18
+	movq	-40(%rbp), %rax
+	movq	%rax, %rsi
+	movl	$10, %edi
+	call	fputc
+	jmp	.L19
 .L17:
 	movq	-48(%rbp), %rax
 	movl	132(%rax), %eax
 	cmpl	$1, %eax
-	jne	.L18
+	jne	.L19
 	movq	-48(%rbp), %rax
 	movl	128(%rax), %eax
 	cmpl	-52(%rbp), %eax
-	jne	.L18
+	jne	.L19
 	movq	-48(%rbp), %rax
 	movzbl	9(%rax), %eax
 	movsbl	%al, %ebx
@@ -292,29 +302,20 @@ imprimirMapa:
 	movl	$0, %eax
 	call	fprintf
 	addq	$64, %rsp
-.L18:
-	movq	-48(%rbp), %rax
-	movq	136(%rax), %rax
-	testq	%rax, %rax
-	je	.L20
-	movq	-48(%rbp), %rax
-	movl	128(%rax), %eax
-	cmpl	-52(%rbp), %eax
-	jne	.L20
 	movq	-40(%rbp), %rax
 	movq	%rax, %rsi
 	movl	$10, %edi
 	call	fputc
-	jmp	.L20
+	jmp	.L19
 .L16:
 	movq	-48(%rbp), %rax
 	movl	132(%rax), %eax
 	cmpl	$2, %eax
-	jne	.L21
+	jne	.L20
 	movq	-48(%rbp), %rax
 	movl	128(%rax), %eax
 	cmpl	-52(%rbp), %eax
-	jne	.L21
+	jne	.L20
 	movq	-48(%rbp), %rax
 	movzbl	68(%rax), %eax
 	movsbl	%al, %r11d
@@ -360,16 +361,16 @@ imprimirMapa:
 	movl	$0, %eax
 	call	printf
 	addq	$48, %rsp
-	jmp	.L20
-.L21:
+	jmp	.L19
+.L20:
 	movq	-48(%rbp), %rax
 	movl	132(%rax), %eax
 	cmpl	$1, %eax
-	jne	.L20
+	jne	.L19
 	movq	-48(%rbp), %rax
 	movl	128(%rax), %eax
 	cmpl	-52(%rbp), %eax
-	jne	.L20
+	jne	.L19
 	movq	-48(%rbp), %rax
 	movzbl	9(%rax), %eax
 	movsbl	%al, %r11d
@@ -415,17 +416,17 @@ imprimirMapa:
 	movl	$0, %eax
 	call	printf
 	addq	$48, %rsp
-.L20:
+.L19:
 	movq	-48(%rbp), %rax
 	movq	136(%rax), %rax
 	movq	%rax, -48(%rbp)
 .L15:
 	cmpq	$0, -48(%rbp)
-	jne	.L22
+	jne	.L21
 	addl	$1, -52(%rbp)
 .L14:
 	cmpl	$1023, -52(%rbp)
-	jle	.L23
+	jle	.L22
 	cmpl	$2, -84(%rbp)
 	jle	.L12
 	movq	-40(%rbp), %rax
