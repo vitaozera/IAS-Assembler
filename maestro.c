@@ -1,3 +1,8 @@
+/**********************************************/
+/*    IAS Assembler - MC 404 - Trabalho 1     */
+/* Vitor Alves Mesquita da Silva - RA: 158498 */
+/**********************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,10 +11,6 @@
 #include "numbers.h"
 #include "diretivas.h"
 #include "rotulos.h"
-
-// DEBUG - depois passar para o .h (junto com todas outras funcoes do arquivo .c)
-void addListaItens(struct item *listaItens, char campo[], int tipo, int linha);
-void freeListaItens(struct item *p);
 
 char *formatarAspas(char *token, int tam) {
 	/* Tira as aspas do final */
@@ -21,17 +22,18 @@ char *formatarAspas(char *token, int tam) {
 /* Analisa as linhas de comando do arquivo e executa operações em cima disso */
 void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 
-	int linhaAtual, i, j;
-	int tam, tamAux;
+	int linhaAtual;
+	int tam;
 	int tipoCampo;
 	int pontoDeMontagem = 0x000;
 	int ladoAtual = ESQUERDA;
 	char buffer[BUFFERSIZE];
-	char temp[BUFFERSIZE], aux;
-	char *token, *tokenAux;
+	char *token;
 	struct rotulo listaRotulos;
 	struct item listaItens, *pItem;
-	struct rotulo *pRotulo;
+	struct item *p;
+	struct rotulo *r;
+	struct palavra *s;
 
 	/* Lê linha por linha e realiza as operacões necessarias contidas nela */
 	linhaAtual = 1;
@@ -47,7 +49,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 	listaItens.tipo = -1;
 	listaItens.prox = NULL;
 
-	// enquanto houver linhas
+	/* enquanto houver linhas */
 	while( fgets(buffer, sizeof(buffer), file) ) {
 		
 		/* Separa as palavras com base nos espacos e as analisa*/
@@ -86,7 +88,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 
 		linhaAtual++;
 	}
-	// Nesse ponto todas linhas do arquivo foram lidas e suas informações estão na listaItens
+	/* Nesse ponto todas linhas do arquivo foram lidas e suas informações estão na listaItens */
 
 	/* Executa as diretivas .set */
 	diretivaSet(&listaItens);
@@ -104,15 +106,6 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 			case INSTRUCAO:
 				executarInstrucao(pItem, &listaItens, &listaRotulos, &pontoDeMontagem, listaPalavras, &ladoAtual);
 			break;
-			case DECIMAL:
-				//DEBUG provavelmente nao é necessario tratar. Ou talvez seja bom pra dizer q deu erro
-			break;
-			case HEXADECIMAL:
-				//DEBUG provavelmente nao é necessario tratar.  Ou talvez seja bom pra dizer q deu erro
-			break;
-			default:
-
-			break;
 		}
 		pItem = pItem->prox;
 	}
@@ -123,7 +116,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 	printf("__________________________________________________________________\n");
 	/* Imprime a lista de itens */
 	printf("LISTA DE ITENS:\n");
-	struct item *p;
+	
 	p = &listaItens;
 	while(p != NULL) {
 		printf("%s\n", p->campo);
@@ -134,7 +127,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 
 	/* Imprime a lista de rotulos */
 	printf("LISTA DE RÓTULOS:\n");
-	struct rotulo *r;
+	
 	r = listaRotulos.prox;
 	while(r != NULL) {
 		printf("rotulo: %s | mem: %X | lado: %d\n", r->nome, r->pos, r->lado);
@@ -145,7 +138,7 @@ void Orquestrador(FILE* file, struct palavra *listaPalavras) {
 
 	/* Imprime a lista de palavras */
 	printf("LISTA DE PALAVRAS:\n");
-	struct palavra *s;
+
 	s = listaPalavras;
 	while(s != NULL) {
 		printf("campo1: %s | campo2: %s | tipo: %d   |  mem: %03X\n", s->campo1, s->campo2, s->tipo, s->pos);
@@ -235,7 +228,7 @@ int identificarTipo(char campo[], int tam) {
 
 /* Tira '\n' da última posicão, se existir */
 int tirarNewLine(char *campo, int tam) {
-	// Se o campo tiver um '\n' no fim, ignore-o.
+	/* Se o campo tiver um '\n' no fim, ignore-o. */
 	if(campo[tam-1] == '\n') {
 		campo[tam-1] = '\0';
 		tam--;

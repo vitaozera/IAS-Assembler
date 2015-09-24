@@ -1,3 +1,8 @@
+/**********************************************/
+/*    IAS Assembler - MC 404 - Trabalho 1     */
+/* Vitor Alves Mesquita da Silva - RA: 158498 */
+/**********************************************/
+
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -40,7 +45,7 @@ int indentificarInstrucao(char campo[]) {
 		return RSH;
 	if( strcmp(campo, "STaddr") == 0)
 		return STaddr;
-	return -1; //instrucao nao existe
+	return -1; /* instrucao nao existe */
 }
 
 bool ehInstrucao(char campo[]) {
@@ -52,7 +57,8 @@ bool ehInstrucao(char campo[]) {
 		return true;
 }
 
-void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int ladoInstrucao, struct rotulo *listaRotulos) {
+void preencherInstrucao(char *campo, int tipoInstrucao, 
+	struct item *pItem, int ladoInstrucao, struct rotulo *listaRotulos) {
 	int tam, pos;
 	char aux[4];
 
@@ -158,7 +164,7 @@ void preencherInstrucao(char *campo, int tipoInstrucao, struct item *pItem, int 
 
 void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotulo *listaRotulos,
 	int *pontoDeMontagem, struct palavra *listaPalavras, int *ladoAtual) {
-	int tipoInstrucao, ladoInstrucao, i;
+	int tipoInstrucao, ladoInstrucao;
 	struct palavra *p;
 	char *campo;
 
@@ -197,10 +203,6 @@ void executarInstrucao(struct item *pItem, struct item *listaItens, struct rotul
 	tipoInstrucao = indentificarInstrucao(pItem->campo);
 
 	preencherInstrucao(campo, tipoInstrucao, pItem->prox, ladoInstrucao, listaRotulos);
-
-
-	//DEBUG deletar o proximo cara da lista de itens. pode ser isso que ta dando bug
-
 }
 
 /* Verifica se uma string contém apenas zeros */

@@ -1,10 +1,3 @@
-/* ONDE PAREI */
-- tava tendo uma treta na hora de instrucoes lerem o campo seguinte quando ele é rótulo. Eu fiz modificacoes no maestro.c criando o tipo desconhecido (usado no orquestrador e identificarTipo) e instrucoes.c e preencherInstrucao
-
-/* Bugs */
-CASOS 5, 8, 5, 4 e muitos outros....
-erro no valgrind. teste t20.txt
-diretiva align nao deve mudar posicao quando ja esta num multiplo
 
 /* Possiveis Bugs */
 o enunciado diz que todo caractere à direita de um # é considerado comentario. Mas o programa só percebe o caractere # quando ele está envolto por espaços. Se estiver justaposto a uma palavra o programa nao consegue perceber.
@@ -13,9 +6,7 @@ o enunciado diz que todo caractere à direita de um # é considerado comentario.
 -talvez o freelistaSet esteja errado. Ele deveria mesmo considerar p->prox ? nao deveria ser igual o free lista rotulo ?
 
 /* A implementar */
-- considerar que a diretiva .set tambem deve substituir quando tiver tipo "ronaldo". Atualmente só compara as palavras caso a palavra seja exatamente igual, sem considerar aspas
 - O tamanho de um monte de vetor está como 64. Mas isso é errado porque estou esquecendo de considerar o \0. Mudar para 65
-- FALTA IMPLEMENTAR O CASO DO TIPO .WORD ROTULO: fiz uma marcacao com // DEBUG no diretivas.c
 
 /* Lembretes */
 - não esquecer de fechar arquivos

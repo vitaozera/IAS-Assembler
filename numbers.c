@@ -1,3 +1,8 @@
+/**********************************************/
+/*    IAS Assembler - MC 404 - Trabalho 1     */
+/* Vitor Alves Mesquita da Silva - RA: 158498 */
+/**********************************************/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -8,7 +13,7 @@ bool ehDecimal(char campo[], int tam) {
 	int i;
 
 	for(i = 0; i < tam; i++) {
-		if(campo[i] < 48 || campo[i] > 57) { // ('0' = 48) e ('9' = 57)
+		if(campo[i] < 48 || campo[i] > 57) { /* ('0' = 48) e ('9' = 57) */
 			return false;
 		}
 	}

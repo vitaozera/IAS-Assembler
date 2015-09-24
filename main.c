@@ -10,14 +10,11 @@
 #include "maestro.h"
 #include "main.h"
 
-void imprimirMapa(struct palavra *listaPalavras, char *argv[], int argc);
-void freeListaPalavras(struct palavra *p);
-
 int main(int argc, char *argv[] ) {
 	char* nomeEntrada;
 	char* nomeSaida = NULL;
-	int linhaAtual;
 	struct palavra listaPalavras;
+	FILE* file;
 
 	/* Inicializa a cabeca da lista ligada de palavras */
 	strcpy(listaPalavras.campo1, "cabeca");
@@ -34,13 +31,13 @@ int main(int argc, char *argv[] ) {
 	nomeEntrada = argv[1];
 
 	/* Armazena o nome de saida (segundo argumento) */
-	// se existir um segundo argumento
+	/* se existir um segundo argumento */
 	if(argv[2] != NULL){
 		nomeSaida = argv[2];
 	}
 	
 	/* Abre o arquivo de entrada e chama o Orquestrador */
-	FILE* file = fopen(nomeEntrada, "r");
+	file = fopen(nomeEntrada, "r");
 	if( file != NULL) {
 		Orquestrador(file, &listaPalavras);
 		fclose(file);

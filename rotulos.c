@@ -1,33 +1,16 @@
+/**********************************************/
+/*    IAS Assembler - MC 404 - Trabalho 1     */
+/* Vitor Alves Mesquita da Silva - RA: 158498 */
+/**********************************************/
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "rotulos.h"
 
-struct rotulo {
-	char nome[64];
-	int pos; // posicao assiciada
-	int lado;
-	struct rotulo *prox;
-};
-
-struct item {
-	char campo[64];
-	int tipo;
-	int linha;
-	struct item *prox;
-};
-
-struct palavra {
-	char campo1[TAM_PALAVRA], campo2[TAM_PALAVRA];
-	int pos;  // posicao associada
-	int tipo;
-	struct palavra *prox;
-};
-
 /* Formata uma string tirando o : final, se existir */
 void formatarRotulo(char token[]) {
 	int tam = strlen(token);
-	int i;
 
 	if( token[tam-1] == ':' ) {
 		token[tam-1] = '\0';
@@ -109,7 +92,7 @@ void rotulosFaltantes(struct rotulo *listaRotulos, struct palavra *listaPalavras
 			/* Se a instrução for uma das que podem variar a depender do valor de X */
 			/* JUMP esq = 0D | JUMP dir = 0E | JUMP+ esq = 0F | JUMP+ dir = 10 |
 			 STaddr esq = 12 | STaddr dir = 13 */
-			// Verifica a PRIMEIRA instrução
+			/* Verifica a PRIMEIRA instrução */
 			campo = p->campo1;
 			printf("LADO_BANANA: %d\n", buscarLadoRotulo(listaRotulos, campo+2) == DIREITA);
 			/* Pro caso do JUMP */
@@ -126,7 +109,7 @@ void rotulosFaltantes(struct rotulo *listaRotulos, struct palavra *listaPalavras
 				campo[1] = '3';
 			}
 
-			// Verifica a SEGUNDA instrução
+			/* Verifica a SEGUNDA instrução */
 			campo = p->campo2;
 			/* Pro caso do JUMP */
 			if(campo[0] == '0' && campo[1] == 'D' && buscarLadoRotulo(listaRotulos, campo+2) == DIREITA) {

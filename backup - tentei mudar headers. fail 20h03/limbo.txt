@@ -1,0 +1,30 @@
+/* Se houver um arquivo de saida */
+			if(argc > 2) {
+				/* Se forem instrucoes */
+				if( p->tipo == INSTRUCOES) {
+				fprintf(file, "%03X %c%c %c%c%c %c%c %c%c%c\n",
+					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					 p->campo2[0], p->campo2[1], p->campo2[2], p->campo2[3], p->campo2[4]);
+				}
+				/* Se for um numero em hexa */
+				else if(p->tipo == NUMERO_HEXA) {
+					fprintf(file, "%03X %c%c %c%c%c %c%c %c%c%c\n",
+					p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					 p->campo1[5], p->campo1[6], p->campo1[7], p->campo1[8], p->campo1[9]);
+				}
+			}
+			/* Se NÃO houver um arquivo de saida */
+			else {
+				/* Se forem instrucoes */
+				if( p->tipo == INSTRUCOES) {
+					printf("%03X %c%c %c%c%c %c%c %c%c%c\n",
+					  p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					  p->campo2[0], p->campo2[1], p->campo2[2], p->campo2[3], p->campo2[4]);
+				}
+				/* Se for um numero em hexa */
+				else if(p->tipo == NUMERO_HEXA) {
+					printf("%03X %c%c %c%c%c %c%c %c%c%c\n",
+					  p->pos, p->campo1[0], p->campo1[1], p->campo1[2], p->campo1[3], p->campo1[4],
+					  p->campo1[5], p->campo1[6], p->campo1[7], p->campo1[8], p->campo1[9]);
+				}
+			}
